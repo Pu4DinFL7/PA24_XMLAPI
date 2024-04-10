@@ -14,11 +14,15 @@ class XMLDocument{
 }
 
 data class XMLEntity(
-     val name: String,
-     val parent: XMLEntity? = null,
+      val name: String,
+      val parent: XMLEntity? = null,
+      val atributes: HashMap<String,String>? = null,
+      val plainText:String? = null
 ) {
-    val childrens = mutableListOf<XMLEntity>()
-    val atributes: String? = null
-    val plainText:String? = null
+    init{
+        parent?.childrens?.add(this)
+    }
+     val childrens = mutableListOf<XMLEntity>()
+
 }
 
