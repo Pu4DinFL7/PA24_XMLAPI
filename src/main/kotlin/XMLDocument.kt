@@ -1,8 +1,8 @@
-class XMLDocument{
-    private val entities = mutableListOf<XMLEntity>()
+data class XMLDocument(
+    private val rootEntity: XMLEntity,
     private val specifications: String = ""
 
-
+)
     fun addEntity(entity:XMLEntity){
 
     }
@@ -11,7 +11,7 @@ class XMLDocument{
 
     }
 
-}
+
 
 data class XMLEntity(
       val name: String,
