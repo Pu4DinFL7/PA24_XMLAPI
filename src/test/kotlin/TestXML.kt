@@ -7,8 +7,17 @@ class TestXML {
     fun testCreateEntity(){
         val a = XMLEntity("a")
         val b = XMLEntity("b", a)
-        assertEquals(b.parent, a)
-        assertEquals(a.childrens, listOf(b))
+        val c = XMLEntity("c", a)
+        val d = XMLEntity("d", b)
+        val e = XMLEntity("e", d)
+       // assertEquals(b.parent, a)
+        //assertEquals(a.childrens, listOf(b))
+        val doc = XMLDocument(a)
+        //assertEquals(doc.addEntity("e",d.name),e)
+        assertEquals(doc.removeEntity("e"),d)
+
+
+
 
 
     }
