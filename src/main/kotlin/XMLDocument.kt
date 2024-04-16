@@ -1,11 +1,17 @@
-import jdk.dynalink.Operation
+import java.io.File
+import java.io.PrintWriter
 import javax.naming.directory.NoSuchAttributeException
 
 data class XMLDocument(
     private val rootEntity: XMLEntity,
-    private val specifications: String = ""
-
+    var version:String? = "1.0",
+    var encoding:String? = "UTF-8"
 ){
+
+    val specifications: String
+        get() {
+            return "<?xml version=\"$version\" encoding=\"$encoding\"?>"
+        }
 
     fun printAllEntities(){
         for (child in getRootEntity().childrens){
@@ -50,9 +56,6 @@ data class XMLDocument(
 
     fun getRootEntity(): XMLEntity {
         return rootEntity
-    }
-    private fun getSpecifications(): String {
-        return specifications
     }
 
     fun addEntity(entityName: String, entityParent: String):XMLEntity? {
@@ -151,6 +154,17 @@ data class XMLDocument(
         }
     }
 
+    fun toXML(name: String, savePath: String = "${name}.xml"){
+        val xmlCollector = XMLTextCollector()
+        xmlCollector.collectedText = specifications
+        getRootEntity().accept(xmlCollector)
+        val file = File(savePath)
+        PrintWriter(file).use { out ->
+            out.write(xmlCollector.collectedText)
+        }
+
+    }
+
 }
 
 fun main(){
@@ -184,13 +198,10 @@ fun main(){
 
 }
 
-
-
 interface XMLVisitor{
     fun visit(entity: XMLEntity)
     fun endVisit(entity: XMLEntity){}
 }
-
 class XMLAttributeAdder(
     private val entityName: String,
     private val key: String,
@@ -221,36 +232,30 @@ class XMLAttributeAdder(
     }
 
 }
-
 class XMLTextCollector : XMLVisitor {
-    private var txt:String = ""
+    var collectedText:String = ""
     private var indentationLevel: Int = 0
     override fun visit(entity: XMLEntity) {
 
-        txt += "\n"+"\t".repeat(indentationLevel)
+        collectedText += "\n"+"\t".repeat(indentationLevel)
         indentationLevel++
 
         if(entity.entityPlainText != "")
-            txt += entity.xmlBegginerTag + entity.entityPlainText
+            collectedText += entity.xmlBegginerTag + entity.entityPlainText
         else
-            txt += entity.xmlBegginerTag
+            collectedText += entity.xmlBegginerTag
     }
 
     override fun endVisit(entity: XMLEntity) {
         indentationLevel--
         if(!entity.isSelfClosing)
             if(entity.entityPlainText != "") {
-                txt += entity.xmlEndTag
+                collectedText += entity.xmlEndTag
             }else
-                txt += "\n" +"\t".repeat(indentationLevel)+ entity.xmlEndTag
+                collectedText += "\n" +"\t".repeat(indentationLevel)+ entity.xmlEndTag
 
-    }
-
-    fun getCollectedText(): String {
-        return txt
     }
 }
-
 data class XMLEntity(
     var name: String,
     var parent: XMLEntity? = null,

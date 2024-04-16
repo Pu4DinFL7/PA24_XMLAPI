@@ -5,11 +5,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a7c901fa-b7bb-48ae-a020-fe9867977a67" name="Changes" comment="addEntity e removeEntity alegadamente a funcionar. Adicionei também um método ao XMLDocument para dar print de todos os filhos (este metodo ainda precisa de ser trabalhado). Nao testei com o assertEquals o removeEntity">
+      <change afterPath="$PROJECT_DIR$/.idea/codeStyles/Project.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/codeStyles/codeStyleConfig.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/kotlin/XMLDocument.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/XMLDocument.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/test.kt" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/test/kotlin/TestXML.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/kotlin/TestXML.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/kotlin/test.kt" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -44,6 +45,7 @@
     "JUnit.TestXML.testAttributes.executor": "Run",
     "JUnit.TestXML.testCreateEntity.executor": "Run",
     "JUnit.TestXML.testRemoveEntity.executor": "Run",
+    "JUnit.TestXML.testToXML.executor": "Run",
     "JUnit.TestXML.testVisitors.executor": "Run",
     "Kotlin.XMLDocumentKt.executor": "Run",
     "Repository.Attach.Annotations": "false",
@@ -61,20 +63,11 @@
     "project.structure.last.edited": "Project",
     "project.structure.proportion": "0.15",
     "project.structure.side.proportion": "0.2",
+    "settings.editor.selected.configurable": "preferences.keymap",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
-  <component name="RunManager" selected="Kotlin.XMLDocumentKt">
-    <configuration name="TestXML.testAddEntity" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="PA24_XMLAPI" />
-      <option name="PACKAGE_NAME" value="" />
-      <option name="MAIN_CLASS_NAME" value="TestXML" />
-      <option name="METHOD_NAME" value="testAddEntity" />
-      <option name="TEST_OBJECT" value="method" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
+  <component name="RunManager" selected="JUnit.TestXML.testToXML">
     <configuration name="TestXML.testAttributes" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="PA24_XMLAPI" />
       <option name="PACKAGE_NAME" value="" />
@@ -90,6 +83,16 @@
       <option name="PACKAGE_NAME" value="" />
       <option name="MAIN_CLASS_NAME" value="TestXML" />
       <option name="METHOD_NAME" value="testRemoveEntity" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="TestXML.testToXML" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="PA24_XMLAPI" />
+      <option name="PACKAGE_NAME" value="" />
+      <option name="MAIN_CLASS_NAME" value="TestXML" />
+      <option name="METHOD_NAME" value="testToXML" />
       <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
@@ -114,11 +117,11 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Kotlin.XMLDocumentKt" />
+        <item itemvalue="JUnit.TestXML.testToXML" />
         <item itemvalue="JUnit.TestXML.testVisitors" />
+        <item itemvalue="Kotlin.XMLDocumentKt" />
         <item itemvalue="JUnit.TestXML.testAttributes" />
         <item itemvalue="JUnit.TestXML.testRemoveEntity" />
-        <item itemvalue="JUnit.TestXML.testAddEntity" />
       </list>
     </recent_temporary>
   </component>
@@ -233,5 +236,24 @@
     <MESSAGE value="XMLDocument passou a ser uma data class e agora temos apenas a entidade root no XMLDocument em vez da lista toda de entidades" />
     <MESSAGE value="addEntity e removeEntity alegadamente a funcionar. Adicionei também um método ao XMLDocument para dar print de todos os filhos (este metodo ainda precisa de ser trabalhado). Nao testei com o assertEquals o removeEntity" />
     <option name="LAST_COMMIT_MESSAGE" value="addEntity e removeEntity alegadamente a funcionar. Adicionei também um método ao XMLDocument para dar print de todos os filhos (este metodo ainda precisa de ser trabalhado). Nao testei com o assertEquals o removeEntity" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="kotlin-function">
+          <url>file://$PROJECT_DIR$/src/test/kotlin/TestXML.kt</url>
+          <line>74</line>
+          <properties class="TestXML" method="testVisitors">
+            <option name="EMULATED" value="true" />
+            <option name="WATCH_EXIT" value="false" />
+          </properties>
+          <option name="timeStamp" value="3" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+  </component>
+  <component name="XSLT-Support.FileAssociations.UIState">
+    <expand />
+    <select />
   </component>
 </project>
