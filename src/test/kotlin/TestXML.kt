@@ -123,8 +123,41 @@ class TestXML {
         comp32.addAllAttributes(hashMapOf("nome" to "Discussão", "peso" to "20%"))
 
         doc.toXML("exEnunciado")
+    }
 
+    @Test
+    fun testXPath(){
+        val plano = XMLEntity("plano")
+        val doc = XMLDocument(plano)
+        val curso = XMLEntity("curso", plano)
+        curso.entityPlainText = "Mestrado em Engenharia Informática"
+        val fuc1 = XMLEntity("fuc", plano)
+        fuc1.addAttribute("codigo", "M4310")
+        val nome = XMLEntity("nome", fuc1)
+        nome.entityPlainText="Programação Avançada"
+        val ects = XMLEntity("ects", fuc1)
+        ects.entityPlainText = "6.0"
+        val avaliação = XMLEntity("avaliacao", fuc1)
+        val comp1 = XMLEntity("componente", avaliação)
+        comp1.addAllAttributes(hashMapOf("nome" to "Quizzes", "peso" to "20%"))
+        val comp2 = XMLEntity("componente", avaliação)
+        comp2.addAllAttributes(hashMapOf("nome" to "Projeto", "peso" to "80%"))
 
+        val fuc2 = XMLEntity("fuc", plano)
+        fuc2.addAttribute("codigo", "03782")
+        val nome2 = XMLEntity("nome", fuc2)
+        nome2.entityPlainText="Dissertação"
+        val ects2 = XMLEntity("ects", fuc2)
+        ects2.entityPlainText = "42.0"
+        val avaliação2 = XMLEntity("avaliacao", fuc2)
+        val comp12 = XMLEntity("componente", avaliação2)
+        comp12.addAllAttributes(hashMapOf("nome" to "Dissertação", "peso" to "60%"))
+        val comp22 = XMLEntity("componente", avaliação2)
+        comp22.addAllAttributes(hashMapOf("nome" to "Apresentação", "peso" to "20%"))
+        val comp32 = XMLEntity("componente", avaliação2)
+        comp32.addAllAttributes(hashMapOf("nome" to "Discussão", "peso" to "20%"))
+
+        assertEquals(listOf("<componente peso=\"20%\" nome=\"Quizzes\"/>", "<componente peso=\"80%\" nome=\"Projeto\"/>", "<componente peso=\"60%\" nome=\"Dissertação\"/>", "<componente peso=\"20%\" nome=\"Apresentação\"/>", "<componente peso=\"20%\" nome=\"Discussão\"/>"), doc.queryXPath("fuc/avaliacao/componente"))
 
     }
 }

@@ -164,7 +164,27 @@ data class XMLDocument(
         }
 
     }
+    fun queryXPath(expression: String): List<String> {
+        val entities = mutableListOf<String>()
+        val parts = expression.split("/")
 
+        var currentEntities = listOf(getRootEntity())
+
+        for (part in parts) {
+            val newEntities = mutableListOf<XMLEntity>()
+            for (entity in currentEntities) {
+                for (child in entity.childrens) {
+                    if (child.name == part) {
+                        newEntities.add(child)
+                    }
+                }
+            }
+            currentEntities = newEntities
+        }
+        currentEntities.forEach{e -> entities.add(e.xmlBegginerTag)}
+
+        return entities
+    }
 }
 
 fun main(){
