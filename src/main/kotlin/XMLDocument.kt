@@ -1,5 +1,4 @@
-import jdk.dynalink.Operation
-import javax.naming.directory.NoSuchAttributeException
+import javax.swing.text.html.parser.Entity
 
 data class XMLDocument(
     private val rootEntity: XMLEntity,
@@ -101,6 +100,16 @@ data class XMLDocument(
         }
     }
 
+    fun editEntity(oldName: String, newName: String){
+        editEntityRecursively(getRootEntity(), oldName, newName)
+    }
+
+    private fun editEntityRecursively(entity:XMLEntity, oldName: String, newName: String){
+        if(entity.name == oldName)
+            entity.name = newName
+        for(child in entity.childrens)
+            editEntityRecursively(child,newName, oldName)
+    }
 
     // adicionar atributo passando apenas o nome da entidade e o atributo (key,value)
     fun addAttribute(entityName:String, key: String, value: String) {
@@ -138,12 +147,6 @@ data class XMLDocument(
             entity.addAttribute(k, v)
         }
     }
-
-
-    fun addAttributeVisitor(entityName: String, key:String, value:String){
-        val attribute = XMLAttributeAdder(entityName, key,value, XMLAttributeAdder.Operation.ADD)
-        getRootEntity().accept(attribute)
-    }
     fun removeToAllEntitiesAttribute(key: String, value: String, accept: (String) -> Boolean) {
         val rootEntity = getRootEntity()
         applyAttributeRecursively(rootEntity, key, value, accept) { entity, k, _ ->
@@ -151,21 +154,87 @@ data class XMLDocument(
         }
     }
 
+    fun addAttributeVisitor(key:String, value:String, accept: (String) -> Boolean){
+        val attribute = XMLAttributeOperator(key,value, XMLAttributeOperator.Operation.ADD, accept)
+        getRootEntity().accept(attribute)
+    }
+
+    fun removeAttributeVisitor(key:String, accept: (String) -> Boolean){
+        val attribute = XMLAttributeOperator(key, null, XMLAttributeOperator.Operation.REMOVE, accept)
+        getRootEntity().accept(attribute)
+    }
+
+    fun editAttributeVisitor(key:String, value: String, accept: (String) -> Boolean){
+        val attribute = XMLAttributeOperator(key, value, XMLAttributeOperator.Operation.EDIT, accept)
+        getRootEntity().accept(attribute)
+    }
+
+    fun addEntityVisitor(entityName:String,accept: (String) -> Boolean){
+        val entity = XMLEntityOperator(null, entityName, XMLEntityOperator.Operation.ADD,accept)
+        getRootEntity().accept(entity)
+    }
+
+    fun removeEntityVisitor(accept: (String) -> Boolean){
+        val entity = XMLEntityOperator(null,null, XMLEntityOperator.Operation.REMOVE, accept)
+        getRootEntity().accept(entity)
+        entity.removeFromList()
+    }
+
+    fun editEntityVisitor(newName:String, accept: (String) -> Boolean){
+        val entity = XMLEntityOperator(newName,null, XMLEntityOperator.Operation.EDIT, accept)
+        getRootEntity().accept(entity)
+    }
+
 }
 
 fun main(){
     val a = XMLEntity("a")
     val b = XMLEntity("b", a)
-    val b2 = XMLEntity("b", a)
+/*
+    val b2 = XMLEntity("b", a,hashMapOf("anoFabricação" to "1938"))
+    val b3 = XMLEntity("b", a,hashMapOf("Banshee" to "44"))
+*/
     val c = XMLEntity("c", a)
     val d = XMLEntity("d", b)
     val e = XMLEntity("e", d)
     val doc = XMLDocument(a)
+    println(doc.toTree())
+    doc.addEntityVisitor("f"){entityName -> entityName == "e"}
+    println("___________________________________")
+    println(doc.toTree())
+
+    println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+    doc.removeEntityVisitor { entityName -> entityName == "b" }
+    println(doc.toTree())
     //doc.addAttribute(b.name, "código", "231")
     //doc.addToAllEntitiesAttribute("Cayde", "06"){entityName-> entityName== "b"}
-    doc.addAttributeVisitor("b", "Banshee", "44")
+
+    doc.addAttributeVisitor("Banshee", "44"){entityName -> entityName == "b anoFabricação=\"1938\""}
+    //println(b2.fullName)
+    //println(b.fullName)
+/*    doc.removeAttributeVisitor("Banshee"){entityName -> entityName.startsWith("b") }
     println(b.getAttributes())
     println(b2.getAttributes())
+    */
+    println("__________________________________________________")
+    doc.editAttributeVisitor("Banshee", "98"){entityName -> entityName.startsWith("b")}
+    println(b.getAttributes())
+   // println(b2.getAttributes())
+
+    doc.removeAttributeVisitor("Banshee"){entityName -> entityName.startsWith("b") && !entityName.contains("anoFabricação")}
+
+    println("_____________________________________________________")
+    println(b.getAttributes())
+
+    println("refjvifhbnglerjeriknerftgrntulwbrlutghbnrwuitghrwuftgburetfhgnrutfgirithwg")
+    println(c.name)
+    doc.editEntityVisitor("c4"){entityName -> entityName.startsWith("c")}
+    println(c.name)
+    println("efrlureutgyilwregtyiareluftgilreatgyrealçauihgierrtgh8ireft48gg478w5gueil")
+/*
+    println(b2.getAttributes())
+    println(b3.getAttributes())
+*/
     //println(doc.printAllEntities())
    /* doc.addEntity("b",a.name)
     doc.addEntity("c",a.name)
@@ -181,7 +250,6 @@ fun main(){
     //doc.removeEntity("b")
     //doc.printAllEntities()
     //println(doc.getRootEntity().childrens.forEach{c -> println(c)})
-
 }
 
 
@@ -191,18 +259,67 @@ interface XMLVisitor{
     fun endVisit(entity: XMLEntity){}
 }
 
-class XMLAttributeAdder(
-    private val entityName: String,
+
+class XMLEntityOperator(
+    private val newName: String?,
+    private val entityName: String?,
+    private val operation: Operation,
+    private val accept: (String) -> Boolean
+): XMLVisitor{
+
+    private var listToRemove: MutableList<XMLEntity> = mutableListOf()
+    init{
+        if(operation == Operation.ADD){
+            if(entityName == null)
+                throw IllegalArgumentException("Missing entity name for operation add")
+        }
+        if(operation ==Operation.EDIT){
+            if(newName == null){
+                throw IllegalArgumentException("Missing parameters to conclude the edit or remove operation")
+            }
+        }
+    }
+    enum class Operation{
+        ADD, EDIT, REMOVE
+    }
+
+    override fun visit(entity: XMLEntity) {
+        if(accept(entity.fullName)){
+            if(operation == Operation.ADD){
+                if (entityName != null) {
+                    XMLEntity(entityName, entity)
+                }
+            }
+            if(operation == Operation.REMOVE){
+                listToRemove.add(entity)
+
+            }
+            if(operation == Operation.EDIT){
+                if (newName != null) {
+                    entity.name = newName
+                }
+            }
+        }
+    }
+
+    fun removeFromList(){
+        listToRemove.forEach { a -> a.parent?.childrens?.remove(a) }
+        println("Lista a remover" + listToRemove)
+    }
+}
+
+class XMLAttributeOperator(
     private val key: String,
     private val value: String?,
-    private val operation: Operation
+    private val operation: Operation,
+    private val accept: (String) -> Boolean
 ): XMLVisitor {
 
     enum class Operation{
         ADD,EDIT,REMOVE
     }
     override fun visit(entity: XMLEntity) {
-        if (entity.name == entityName) {
+        if (accept(entity.fullName)) {
             if(operation == Operation.ADD) {
                 if (value != null) {
                     entity.addAttribute(key, value)
@@ -306,14 +423,14 @@ data class XMLEntity(
     fun removeAttribute(attribute: String){
         if(attributesMap?.containsKey(attribute) == true)
             attributesMap?.remove(attribute)
-        else
-            throw NoSuchAttributeException(""+this.name+" does not have such attribute")
+       /* else
+            throw NoSuchAttributeException(""+this.name+" does not have such attribute")*/
     }
     fun editAttribute(attribute: String, newValue: String){
         if(attributesMap?.containsKey(attribute) == true)
             attributesMap?.put(attribute, newValue)
-        else
-            throw NoSuchAttributeException(""+this.name+" does not have such attribute")
+        /*else
+            throw NoSuchAttributeException(""+this.name+" does not have such attribute")*/
     }
     fun addAllAttributes(attributes: HashMap<String, String>){
         if (attributesMap == null) {
