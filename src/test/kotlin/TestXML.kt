@@ -62,12 +62,6 @@ class TestXML {
         assertEquals(null, c.getAttributes())
         assertEquals(null, d.getAttributes())
 
-        //adicionar um atributo a todas as entidades com um determinado nome
-
-        doc.addToAllEntitiesAttribute("Cayde", "06"){entityName -> entityName == "b"}
-
-        assertEquals(hashMapOf("Cayde" to "06"), b.getAttributes())
-        assertEquals(hashMapOf("Cayde" to "06"), b2.getAttributes())
 
     }
 
@@ -109,12 +103,24 @@ class TestXML {
         doc.removeAttributeVisitor("Cayde") { entityName -> entityName.startsWith("b") }
         assertEquals(hashMapOf("Banshee" to "44"), b3.getAttributes())
 
+       // editar um atributo da entidade
         doc.editAttributeVisitor("Banshee", "98"){entityName -> entityName == b3.fullName }
-
         assertEquals(hashMapOf("Banshee" to "98"), b3.getAttributes())
+    }
 
+    @Test
+    fun testEntityVisitors(){
+        val a = XMLEntity("a")
+        val b = XMLEntity("b", a)
+        val b2 = XMLEntity("b", a,hashMapOf("anoFabricação" to "1938"))
+        val b3 = XMLEntity("b", a,hashMapOf("Banshee" to "44"))
+        val c = XMLEntity("c", a)
+        val d = XMLEntity("d", b)
+        val e = XMLEntity("e", d)
+        val doc = XMLDocument(a)
+
+        // adicionar a entidade "f", que é filha do "e" ao documento XML
         doc.addEntityVisitor("f"){entityName -> entityName == "e"}
-
         assertEquals("|a\n" +
                 "\t|b\n" +
                 "\t\t|d\n" +
@@ -124,8 +130,19 @@ class TestXML {
                 "\t|b\n" +
                 "\t|c", doc.toTree())
 
+        // remove a entidade "f" adicionada anteriormente
+        doc.removeEntityVisitor { entityName -> entityName == "f" }
+        assertEquals("|a\n" +
+                "\t|b\n" +
+                "\t\t|d\n" +
+                "\t\t\t|e\n" +
+                "\t|b\n" +
+                "\t|b\n" +
+                "\t|c", doc.toTree())
 
+        doc.editEntityVisitor("c4"){entityName -> entityName == "c"}
 
+        assertEquals("c4", c.name)
     }
 
     @Test

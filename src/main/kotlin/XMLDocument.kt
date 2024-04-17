@@ -14,29 +14,12 @@ data class XMLDocument(
             return "<?xml version=\"$version\" encoding=\"$encoding\"?>"
         }
 
-    fun printAllEntities(){
-        for (child in getRootEntity().childrens){
-            println(child)
-            printAllEntitiesRecursively(child)
-        }
-    }
-
-    fun printAllEntitiesRecursively(entity: XMLEntity){
-        for (child in entity.childrens){
-            println(child)
-            if(entity.childrens == null){
-                return
-            }
-            printAllEntitiesRecursively(child)
-        }
-    }
     fun toTree(): String {
         val rootEntity = getRootEntity()
         val tree = XMLToTree()
         rootEntity.accept(tree)
         return tree.collectedText.trim()
     }
-
 
     fun getRootEntity(): XMLEntity {
         return rootEntity
@@ -88,17 +71,6 @@ data class XMLDocument(
         }
     }
 
-    fun editEntity(oldName: String, newName: String){
-        editEntityRecursively(getRootEntity(), oldName, newName)
-    }
-
-    private fun editEntityRecursively(entity:XMLEntity, oldName: String, newName: String){
-        if(entity.name == oldName)
-            entity.name = newName
-        for(child in entity.childrens)
-            editEntityRecursively(child,newName, oldName)
-    }
-
     // adicionar atributo passando apenas o nome da entidade e o atributo (key,value)
     fun addAttribute(entityName:String, key: String, value: String) {
         addAttributeRecursively(getRootEntity(), entityName, key, value)
@@ -114,33 +86,6 @@ data class XMLDocument(
             addAttributeRecursively(child, entityName, key, value)
     }
 
-    //
-    private fun applyAttributeRecursively(entity: XMLEntity?, key: String, value: String, accept: (String) -> Boolean, apply: (XMLEntity, String, String) -> Unit) {
-        if (entity == null) return
-
-        if (accept(entity.name)) {
-            apply(entity, key, value)
-        }
-
-        for (child in entity.childrens) {
-            applyAttributeRecursively(child, key, value, accept, apply)
-        }
-    }
-
-    //adiciona um atributo a todas as entidades com determinado nome através de uma função de 2a ordem em que o user escreve a condição que quer ver satisfeita para que seja adicionado esse atributo
-
-    fun addToAllEntitiesAttribute(key: String, value: String, accept: (String) -> Boolean) {
-        val rootEntity = getRootEntity()
-        applyAttributeRecursively(rootEntity, key, value, accept) { entity, k, v ->
-            entity.addAttribute(k, v)
-        }
-    }
-    fun removeToAllEntitiesAttribute(key: String, value: String, accept: (String) -> Boolean) {
-        val rootEntity = getRootEntity()
-        applyAttributeRecursively(rootEntity, key, value, accept) { entity, k, _ ->
-            entity.removeAttribute(k)
-        }
-    }
 
     fun addAttributeVisitor(key:String, value:String, accept: (String) -> Boolean){
         val attribute = XMLAttributeOperator(key,value, XMLAttributeOperator.Operation.ADD, accept)
@@ -204,69 +149,10 @@ data class XMLDocument(
 
         return entities
     }
-}
 
-fun main(){
-    val a = XMLEntity("a")
-    val b = XMLEntity("b", a)
-    val b2 = XMLEntity("b", a,hashMapOf("anoFabricação" to "1938"))
-    val b3 = XMLEntity("b", a,hashMapOf("Banshee" to "44"))
-    val c = XMLEntity("c", a)
-    val d = XMLEntity("d", b)
-    val e = XMLEntity("e", d)
-    val doc = XMLDocument(a)
-    println(doc.toTree())
-    doc.addEntityVisitor("f"){entityName -> entityName == "e"}
-    println("___________________________________")
-    println(doc.toTree())
-
-    println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
-    doc.removeEntityVisitor { entityName -> entityName == "b" }
-    println(doc.toTree())
-    //doc.addAttribute(b.name, "código", "231")
-    //doc.addToAllEntitiesAttribute("Cayde", "06"){entityName-> entityName== "b"}
-
-    doc.addAttributeVisitor("Banshee", "44"){entityName -> entityName == "b anoFabricação=\"1938\""}
-    //println(b2.fullName)
-    //println(b.fullName)
-/*    doc.removeAttributeVisitor("Banshee"){entityName -> entityName.startsWith("b") }
-    println(b.getAttributes())
-    println(b2.getAttributes())
-    */
-    println("__________________________________________________")
-    doc.editAttributeVisitor("Banshee", "98"){entityName -> entityName.startsWith("b")}
-    println(b.getAttributes())
-   // println(b2.getAttributes())
-
-    doc.removeAttributeVisitor("Banshee"){entityName -> entityName.startsWith("b") && !entityName.contains("anoFabricação")}
-
-    println("_____________________________________________________")
-    println(b.getAttributes())
-
-    println("refjvifhbnglerjeriknerftgrntulwbrlutghbnrwuitghrwuftgburetfhgnrutfgirithwg")
-    println(c.name)
-    doc.editEntityVisitor("c4"){entityName -> entityName.startsWith("c")}
-    println(c.name)
-    println("efrlureutgyilwregtyiareluftgilreatgyrealçauihgierrtgh8ireft48gg478w5gueil")
-/*
-    println(b2.getAttributes())
-    println(b3.getAttributes())
-*/
-    //println(doc.printAllEntities())
-   /* doc.addEntity("b",a.name)
-    doc.addEntity("c",a.name)
-    doc.addEntity("d",b.name)
-    doc.addEntity("e",d.name)*/
-    //doc.printAllEntities()
-    //println(doc.getRootEntity().childrens)
-   /* println("_______________________________________________________________________")
-    print(doc.addEntity("e", d.name))
-    println("EPAH pleasee")
-    println(doc.toTree())
-    println("_______________________________________________________________________")*/
-    //doc.removeEntity("b")
-    //doc.printAllEntities()
-    //println(doc.getRootEntity().childrens.forEach{c -> println(c)})
+    fun visitWithCostumeVisit(visitor: XMLVisitor){
+        getRootEntity().accept(visitor)
+    }
 }
 
 interface XMLVisitor{
@@ -274,13 +160,12 @@ interface XMLVisitor{
     fun endVisit(entity: XMLEntity){}
 }
 
-
 class XMLToTree :XMLVisitor{
     var collectedText:String = ""
     private var indentationLevel: Int = 0
 
     override fun visit(entity: XMLEntity) {
-        collectedText += "\t".repeat(indentationLevel)+ "﹂" + entity.name + "\n"
+        collectedText += "\t".repeat(indentationLevel)+ "|" + entity.name + "\n"
         indentationLevel++
     }
 

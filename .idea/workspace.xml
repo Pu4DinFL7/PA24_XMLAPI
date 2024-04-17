@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a7c901fa-b7bb-48ae-a020-fe9867977a67" name="Changes" comment="Dou um commit">
+    <list default="true" id="a7c901fa-b7bb-48ae-a020-fe9867977a67" name="Changes" comment="Primeiro dou commit e so depois é que dou push!!">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/kotlin/XMLDocument.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/XMLDocument.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/test/kotlin/TestXML.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/kotlin/TestXML.kt" afterDir="false" />
@@ -65,7 +65,7 @@
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
-  <component name="RunManager" selected="Kotlin.XMLDocumentKt">
+  <component name="RunManager" selected="JUnit.TestXML.testAttributeVisitors">
     <configuration name="TestXML.testAttributeVisitors" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="PA24_XMLAPI" />
       <option name="PACKAGE_NAME" value="" />
@@ -115,8 +115,8 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Kotlin.XMLDocumentKt" />
         <item itemvalue="JUnit.TestXML.testAttributeVisitors" />
+        <item itemvalue="Kotlin.XMLDocumentKt" />
         <item itemvalue="JUnit.TestXML.testXPath" />
         <item itemvalue="JUnit.TestXML.testToXML" />
         <item itemvalue="JUnit.TestXML.testVisitors" />
@@ -144,7 +144,7 @@
       <workItem from="1713190334926" duration="3965000" />
       <workItem from="1713200477463" duration="17208000" />
       <workItem from="1713283945118" duration="19677000" />
-      <workItem from="1713342370577" duration="3286000" />
+      <workItem from="1713342370577" duration="4546000" />
     </task>
     <task id="LOCAL-00001" summary="First commit">
       <option name="closed" value="true" />
@@ -234,7 +234,15 @@
       <option name="project" value="LOCAL" />
       <updated>1713342555082</updated>
     </task>
-    <option name="localTasksCounter" value="12" />
+    <task id="LOCAL-00012" summary="Primeiro dou commit e so depois é que dou push!!">
+      <option name="closed" value="true" />
+      <created>1713345694789</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1713345694789</updated>
+    </task>
+    <option name="localTasksCounter" value="13" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -252,6 +260,7 @@
     <MESSAGE value="addEntity e removeEntity alegadamente a funcionar. Adicionei também um método ao XMLDocument para dar print de todos os filhos (este metodo ainda precisa de ser trabalhado). Nao testei com o assertEquals o removeEntity" />
     <MESSAGE value="Entretém-te" />
     <MESSAGE value="Dou um commit" />
-    <option name="LAST_COMMIT_MESSAGE" value="Dou um commit" />
+    <MESSAGE value="Primeiro dou commit e so depois é que dou push!!" />
+    <option name="LAST_COMMIT_MESSAGE" value="Primeiro dou commit e so depois é que dou push!!" />
   </component>
 </project>
