@@ -1,10 +1,18 @@
+import java.io.File
+import java.io.PrintWriter
+import javax.naming.directory.NoSuchAttributeException
 import javax.swing.text.html.parser.Entity
 
 data class XMLDocument(
     private val rootEntity: XMLEntity,
-    private val specifications: String = ""
-
+    var version:String? = "1.0",
+    var encoding:String? = "UTF-8"
 ){
+
+    val specifications: String
+        get() {
+            return "<?xml version=\"$version\" encoding=\"$encoding\"?>"
+        }
 
     fun printAllEntities(){
         for (child in getRootEntity().childrens){
@@ -49,9 +57,6 @@ data class XMLDocument(
 
     fun getRootEntity(): XMLEntity {
         return rootEntity
-    }
-    private fun getSpecifications(): String {
-        return specifications
     }
 
     fun addEntity(entityName: String, entityParent: String):XMLEntity? {
@@ -185,6 +190,37 @@ data class XMLDocument(
         getRootEntity().accept(entity)
     }
 
+    fun toXML(name: String, savePath: String = "${name}.xml"){
+        val xmlCollector = XMLTextCollector()
+        xmlCollector.collectedText = specifications
+        getRootEntity().accept(xmlCollector)
+        val file = File(savePath)
+        PrintWriter(file).use { out ->
+            out.write(xmlCollector.collectedText)
+        }
+
+    }
+    fun queryXPath(expression: String): List<String> {
+        val entities = mutableListOf<String>()
+        val parts = expression.split("/")
+
+        var currentEntities = listOf(getRootEntity())
+
+        for (part in parts) {
+            val newEntities = mutableListOf<XMLEntity>()
+            for (entity in currentEntities) {
+                for (child in entity.childrens) {
+                    if (child.name == part) {
+                        newEntities.add(child)
+                    }
+                }
+            }
+            currentEntities = newEntities
+        }
+        currentEntities.forEach{e -> entities.add(e.xmlBegginerTag)}
+
+        return entities
+    }
 }
 
 fun main(){
@@ -251,8 +287,6 @@ fun main(){
     //doc.printAllEntities()
     //println(doc.getRootEntity().childrens.forEach{c -> println(c)})
 }
-
-
 
 interface XMLVisitor{
     fun visit(entity: XMLEntity)
@@ -338,36 +372,30 @@ class XMLAttributeOperator(
     }
 
 }
-
 class XMLTextCollector : XMLVisitor {
-    private var txt:String = ""
+    var collectedText:String = ""
     private var indentationLevel: Int = 0
     override fun visit(entity: XMLEntity) {
 
-        txt += "\n"+"\t".repeat(indentationLevel)
+        collectedText += "\n"+"\t".repeat(indentationLevel)
         indentationLevel++
 
         if(entity.entityPlainText != "")
-            txt += entity.xmlBegginerTag + entity.entityPlainText
+            collectedText += entity.xmlBegginerTag + entity.entityPlainText
         else
-            txt += entity.xmlBegginerTag
+            collectedText += entity.xmlBegginerTag
     }
 
     override fun endVisit(entity: XMLEntity) {
         indentationLevel--
         if(!entity.isSelfClosing)
             if(entity.entityPlainText != "") {
-                txt += entity.xmlEndTag
+                collectedText += entity.xmlEndTag
             }else
-                txt += "\n" +"\t".repeat(indentationLevel)+ entity.xmlEndTag
+                collectedText += "\n" +"\t".repeat(indentationLevel)+ entity.xmlEndTag
 
-    }
-
-    fun getCollectedText(): String {
-        return txt
     }
 }
-
 data class XMLEntity(
     var name: String,
     var parent: XMLEntity? = null,
