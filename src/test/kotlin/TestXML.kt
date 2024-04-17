@@ -91,6 +91,44 @@ class TestXML {
     }
 
     @Test
+    fun testAttributeVisitors(){
+        val a = XMLEntity("a")
+        val b = XMLEntity("b", a)
+        val b2 = XMLEntity("b", a,hashMapOf("anoFabricação" to "1938"))
+        val b3 = XMLEntity("b", a,hashMapOf("Banshee" to "44"))
+        val c = XMLEntity("c", a)
+        val d = XMLEntity("d", b)
+        val e = XMLEntity("e", d)
+        val doc = XMLDocument(a)
+
+        // adicionar um atributo à entidade
+        doc.addAttributeVisitor("Cayde", "06"){ entityName -> entityName.startsWith("b")}
+        assertEquals(hashMapOf("Banshee" to "44","Cayde" to "06" ),b3.getAttributes())
+
+        //remover um atributo à entidade
+        doc.removeAttributeVisitor("Cayde") { entityName -> entityName.startsWith("b") }
+        assertEquals(hashMapOf("Banshee" to "44"), b3.getAttributes())
+
+        doc.editAttributeVisitor("Banshee", "98"){entityName -> entityName == b3.fullName }
+
+        assertEquals(hashMapOf("Banshee" to "98"), b3.getAttributes())
+
+        doc.addEntityVisitor("f"){entityName -> entityName == "e"}
+
+        assertEquals("|a\n" +
+                "\t|b\n" +
+                "\t\t|d\n" +
+                "\t\t\t|e\n" +
+                "\t\t\t\t|f\n" +
+                "\t|b\n" +
+                "\t|b\n" +
+                "\t|c", doc.toTree())
+
+
+
+    }
+
+    @Test
     fun testToXML(){
         val plano = XMLEntity("plano")
         val doc = XMLDocument(plano)
@@ -157,7 +195,7 @@ class TestXML {
         val comp32 = XMLEntity("componente", avaliação2)
         comp32.addAllAttributes(hashMapOf("nome" to "Discussão", "peso" to "20%"))
 
-        assertEquals(listOf("<componente peso=\"20%\" nome=\"Quizzes\"/>", "<componente peso=\"80%\" nome=\"Projeto\"/>", "<componente peso=\"60%\" nome=\"Dissertação\"/>", "<componente peso=\"20%\" nome=\"Apresentação\"/>", "<componente peso=\"20%\" nome=\"Discussão\"/>"), doc.queryXPath("fuc/avaliacao/componente"))
+        assertEquals(listOf("<componente peso=\"20%\" nome=\"Quizzes\"/>", "<componente peso=\"80%\" nome=\"Projeto\"/>", "<componente peso=\"60%\" nome=\"Dissertação\"/>", "<componente peso=\"20%\" nome=\"Apresentação\"/>", "<componente peso=\"20%\" nome=\"Discussão\"/>"), doc.queryXPath("fuc"))
 
     }
 }

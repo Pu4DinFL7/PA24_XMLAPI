@@ -4,9 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a7c901fa-b7bb-48ae-a020-fe9867977a67" name="Changes" comment="Entretém-te">
+    <list default="true" id="a7c901fa-b7bb-48ae-a020-fe9867977a67" name="Changes" comment="Dou um commit">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/kotlin/XMLDocument.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/XMLDocument.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/kotlin/TestXML.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/kotlin/TestXML.kt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -38,10 +39,13 @@
     "Downloaded.Files.Path.Enabled": "false",
     "JUnit.TestXML.createEntity.executor": "Run",
     "JUnit.TestXML.testAddEntity.executor": "Run",
+    "JUnit.TestXML.testAttributeVisitors.executor": "Run",
     "JUnit.TestXML.testAttributes.executor": "Run",
     "JUnit.TestXML.testCreateEntity.executor": "Run",
     "JUnit.TestXML.testRemoveEntity.executor": "Run",
+    "JUnit.TestXML.testToXML.executor": "Run",
     "JUnit.TestXML.testVisitors.executor": "Run",
+    "JUnit.TestXML.testXPath.executor": "Run",
     "Kotlin.XMLDocumentKt.executor": "Run",
     "Repository.Attach.Annotations": "false",
     "Repository.Attach.JavaDocs": "false",
@@ -62,31 +66,21 @@
   }
 }]]></component>
   <component name="RunManager" selected="Kotlin.XMLDocumentKt">
-    <configuration name="TestXML.testAddEntity" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="TestXML.testAttributeVisitors" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="PA24_XMLAPI" />
       <option name="PACKAGE_NAME" value="" />
       <option name="MAIN_CLASS_NAME" value="TestXML" />
-      <option name="METHOD_NAME" value="testAddEntity" />
+      <option name="METHOD_NAME" value="testAttributeVisitors" />
       <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="TestXML.testAttributes" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="TestXML.testToXML" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="PA24_XMLAPI" />
       <option name="PACKAGE_NAME" value="" />
       <option name="MAIN_CLASS_NAME" value="TestXML" />
-      <option name="METHOD_NAME" value="testAttributes" />
-      <option name="TEST_OBJECT" value="method" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="TestXML.testRemoveEntity" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="PA24_XMLAPI" />
-      <option name="PACKAGE_NAME" value="" />
-      <option name="MAIN_CLASS_NAME" value="TestXML" />
-      <option name="METHOD_NAME" value="testRemoveEntity" />
+      <option name="METHOD_NAME" value="testToXML" />
       <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
@@ -102,6 +96,16 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="TestXML.testXPath" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="PA24_XMLAPI" />
+      <option name="PACKAGE_NAME" value="" />
+      <option name="MAIN_CLASS_NAME" value="TestXML" />
+      <option name="METHOD_NAME" value="testXPath" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="XMLDocumentKt" type="JetRunConfigurationType" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="XMLDocumentKt" />
       <module name="PA24_XMLAPI" />
@@ -112,10 +116,10 @@
     <recent_temporary>
       <list>
         <item itemvalue="Kotlin.XMLDocumentKt" />
+        <item itemvalue="JUnit.TestXML.testAttributeVisitors" />
+        <item itemvalue="JUnit.TestXML.testXPath" />
+        <item itemvalue="JUnit.TestXML.testToXML" />
         <item itemvalue="JUnit.TestXML.testVisitors" />
-        <item itemvalue="JUnit.TestXML.testAttributes" />
-        <item itemvalue="JUnit.TestXML.testRemoveEntity" />
-        <item itemvalue="JUnit.TestXML.testAddEntity" />
       </list>
     </recent_temporary>
   </component>
@@ -140,6 +144,7 @@
       <workItem from="1713190334926" duration="3965000" />
       <workItem from="1713200477463" duration="17208000" />
       <workItem from="1713283945118" duration="19677000" />
+      <workItem from="1713342370577" duration="3286000" />
     </task>
     <task id="LOCAL-00001" summary="First commit">
       <option name="closed" value="true" />
@@ -221,7 +226,15 @@
       <option name="project" value="LOCAL" />
       <updated>1713293874075</updated>
     </task>
-    <option name="localTasksCounter" value="11" />
+    <task id="LOCAL-00011" summary="Dou um commit">
+      <option name="closed" value="true" />
+      <created>1713342555082</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1713342555082</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -238,6 +251,7 @@
     <MESSAGE value="XMLDocument passou a ser uma data class e agora temos apenas a entidade root no XMLDocument em vez da lista toda de entidades" />
     <MESSAGE value="addEntity e removeEntity alegadamente a funcionar. Adicionei também um método ao XMLDocument para dar print de todos os filhos (este metodo ainda precisa de ser trabalhado). Nao testei com o assertEquals o removeEntity" />
     <MESSAGE value="Entretém-te" />
-    <option name="LAST_COMMIT_MESSAGE" value="Entretém-te" />
+    <MESSAGE value="Dou um commit" />
+    <option name="LAST_COMMIT_MESSAGE" value="Dou um commit" />
   </component>
 </project>

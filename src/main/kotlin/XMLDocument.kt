@@ -32,28 +32,11 @@ data class XMLDocument(
     }
     fun toTree(): String {
         val rootEntity = getRootEntity()
-        return buildTree(rootEntity, mutableSetOf(), "")
+        val tree = XMLToTree()
+        rootEntity.accept(tree)
+        return tree.collectedText.trim()
     }
 
-    private fun buildTree(entity: XMLEntity, visited: MutableSet<String>, prefix: String): String {
-        val sb = StringBuilder()
-        sb.append(prefix)
-        sb.append(entity.name)
-        sb.append("\n")
-
-        // Add the entity name to the visited set
-        visited.add(entity.name)
-
-        // Recursively build the tree for each child entity
-        for (child in entity.childrens) {
-            // Add child entity only if it hasn't been visited before
-            if (visited.add(child.name)) {
-                sb.append(buildTree(child, visited, "$prefix  |")) // Add indentation for child entities
-            }
-        }
-
-        return sb.toString()
-    }
 
     fun getRootEntity(): XMLEntity {
         return rootEntity
@@ -226,10 +209,8 @@ data class XMLDocument(
 fun main(){
     val a = XMLEntity("a")
     val b = XMLEntity("b", a)
-/*
     val b2 = XMLEntity("b", a,hashMapOf("anoFabricação" to "1938"))
     val b3 = XMLEntity("b", a,hashMapOf("Banshee" to "44"))
-*/
     val c = XMLEntity("c", a)
     val d = XMLEntity("d", b)
     val e = XMLEntity("e", d)
@@ -294,6 +275,19 @@ interface XMLVisitor{
 }
 
 
+class XMLToTree :XMLVisitor{
+    var collectedText:String = ""
+    private var indentationLevel: Int = 0
+
+    override fun visit(entity: XMLEntity) {
+        collectedText += "\t".repeat(indentationLevel)+ "﹂" + entity.name + "\n"
+        indentationLevel++
+    }
+
+    override fun endVisit(entity: XMLEntity) {
+        indentationLevel--
+    }
+}
 class XMLEntityOperator(
     private val newName: String?,
     private val entityName: String?,
