@@ -5,6 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a7c901fa-b7bb-48ae-a020-fe9867977a67" name="Changes" comment="Dou um commit">
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/kotlin/XMLDocument.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/XMLDocument.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/test/kotlin/TestXML.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/kotlin/TestXML.kt" afterDir="false" />
@@ -34,38 +35,49 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Downloaded.Files.Path.Enabled": "false",
-    "JUnit.TestXML.createEntity.executor": "Run",
-    "JUnit.TestXML.testAddEntity.executor": "Run",
-    "JUnit.TestXML.testAttributeVisitors.executor": "Run",
-    "JUnit.TestXML.testAttributes.executor": "Run",
-    "JUnit.TestXML.testCreateEntity.executor": "Run",
-    "JUnit.TestXML.testRemoveEntity.executor": "Run",
-    "JUnit.TestXML.testToXML.executor": "Run",
-    "JUnit.TestXML.testVisitors.executor": "Run",
-    "JUnit.TestXML.testXPath.executor": "Run",
-    "Kotlin.XMLDocumentKt.executor": "Run",
-    "Repository.Attach.Annotations": "false",
-    "Repository.Attach.JavaDocs": "false",
-    "Repository.Attach.Sources": "false",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "master",
-    "kotlin-language-version-configured": "true",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "project.structure.last.edited": "Project",
-    "project.structure.proportion": "0.15",
-    "project.structure.side.proportion": "0.2",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Downloaded.Files.Path.Enabled&quot;: &quot;false&quot;,
+    &quot;JUnit.TestXML.createEntity.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.TestXML.testAddEntity.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.TestXML.testAttributeVisitors.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.TestXML.testAttributes.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.TestXML.testCreateEntity.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.TestXML.testRemoveEntity.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.TestXML.testToXML.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.TestXML.testVisitors.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.TestXML.testXPath.executor&quot;: &quot;Run&quot;,
+    &quot;Kotlin.XMLDocumentKt.executor&quot;: &quot;Run&quot;,
+    &quot;Repository.Attach.Annotations&quot;: &quot;false&quot;,
+    &quot;Repository.Attach.JavaDocs&quot;: &quot;false&quot;,
+    &quot;Repository.Attach.Sources&quot;: &quot;false&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Project&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
-  <component name="RunManager" selected="Kotlin.XMLDocumentKt">
+}</component>
+  <component name="RunManager" selected="JUnit.TestXML.testAttributeVisitors">
+    <configuration name="TestXML.testAddEntity" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="PA24_XMLAPI" />
+      <option name="PACKAGE_NAME" value="" />
+      <option name="MAIN_CLASS_NAME" value="TestXML" />
+      <option name="METHOD_NAME" value="testAddEntity" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="TestXML.testAttributeVisitors" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="PA24_XMLAPI" />
       <option name="PACKAGE_NAME" value="" />
@@ -76,21 +88,11 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="TestXML.testToXML" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="TestXML.testCreateEntity" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="PA24_XMLAPI" />
       <option name="PACKAGE_NAME" value="" />
       <option name="MAIN_CLASS_NAME" value="TestXML" />
-      <option name="METHOD_NAME" value="testToXML" />
-      <option name="TEST_OBJECT" value="method" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="TestXML.testVisitors" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="PA24_XMLAPI" />
-      <option name="PACKAGE_NAME" value="" />
-      <option name="MAIN_CLASS_NAME" value="TestXML" />
-      <option name="METHOD_NAME" value="testVisitors" />
+      <option name="METHOD_NAME" value="testCreateEntity" />
       <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
@@ -115,18 +117,18 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Kotlin.XMLDocumentKt" />
         <item itemvalue="JUnit.TestXML.testAttributeVisitors" />
+        <item itemvalue="JUnit.TestXML.testAddEntity" />
+        <item itemvalue="JUnit.TestXML.testCreateEntity" />
+        <item itemvalue="Kotlin.XMLDocumentKt" />
         <item itemvalue="JUnit.TestXML.testXPath" />
-        <item itemvalue="JUnit.TestXML.testToXML" />
-        <item itemvalue="JUnit.TestXML.testVisitors" />
       </list>
     </recent_temporary>
   </component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="jdk-19.0.2-corretto-19.0.2-4caba194b151-48ba4555" />
+        <option value="jdk-19.0.2-corretto-19.0.2-f644763e9732-1e16d6ec" />
       </set>
     </attachedChunks>
   </component>
@@ -145,6 +147,7 @@
       <workItem from="1713200477463" duration="17208000" />
       <workItem from="1713283945118" duration="19677000" />
       <workItem from="1713342370577" duration="3286000" />
+      <workItem from="1715876811344" duration="3219000" />
     </task>
     <task id="LOCAL-00001" summary="First commit">
       <option name="closed" value="true" />

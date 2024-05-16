@@ -1,7 +1,5 @@
 import java.io.File
 import java.io.PrintWriter
-import javax.naming.directory.NoSuchAttributeException
-import javax.swing.text.html.parser.Entity
 
 data class XMLDocument(
     private val rootEntity: XMLEntity,
@@ -14,22 +12,16 @@ data class XMLDocument(
             return "<?xml version=\"$version\" encoding=\"$encoding\"?>"
         }
 
-    fun printAllEntities(){
-        for (child in getRootEntity().childrens){
-            println(child)
-            printAllEntitiesRecursively(child)
+    private fun validateName(entityName: String, variableName: String) {
+        if (entityName.contains(" ")) {
+            throw IllegalArgumentException("$variableName cannot contain spaces.")
+        }
+
+        if (!entityName.matches(Regex("[a-zA-Z0-9_\\-]+"))) {
+            throw IllegalArgumentException("$variableName can only contain alphanumeric characters, underscores, and hyphens.")
         }
     }
 
-    fun printAllEntitiesRecursively(entity: XMLEntity){
-        for (child in entity.childrens){
-            println(child)
-            if(entity.childrens == null){
-                return
-            }
-            printAllEntitiesRecursively(child)
-        }
-    }
     fun toTree(): String {
         val rootEntity = getRootEntity()
         val tree = XMLToTree()
@@ -37,127 +29,34 @@ data class XMLDocument(
         return tree.collectedText.trim()
     }
 
-
     fun getRootEntity(): XMLEntity {
         return rootEntity
     }
 
-    fun addEntity(entityName: String, entityParent: String):XMLEntity? {
-        val rootEntity = getRootEntity()
-        return addEntityRecursively(rootEntity, entityName, entityParent)
-    }
-    private fun addEntityRecursively(entity: XMLEntity, entityName: String, entityParent: String): XMLEntity? {
-        // se o parent for a propria root faz o if seguinte:
-        if(entityParent == entity.name) {
-            val parent = XMLEntity(entityParent, entity.parent)
-            entity.childrens.add(XMLEntity(entityName, parent))
-            return XMLEntity(entityName, parent)
-        }
-        // senao vai iterando pelos vários filhos ate encontrar o parent correspondente ao passado nos argumentos
-        for (child in entity.childrens) {
-            if (child.name == entityParent) {
-                val parent = XMLEntity(entityParent, child.parent)
-                child.childrens.add(XMLEntity(entityName, parent))
-                return XMLEntity(entityName, parent)
-            } else {
-                val result = addEntityRecursively(child, entityName, entityParent)
-                if (result != null) {
-                    return result
-                }
-            }
-        }
-        return null
-    }
-
-
-
-    fun removeEntity(entityName: String){
-        val rootEntity = getRootEntity()
-        return removeEntityRecursively(rootEntity,entityName)
-    }
-    private fun removeEntityRecursively(entity: XMLEntity, entityName: String) {
-        val iterator = entity.childrens.iterator()
-        while (iterator.hasNext()) {
-            val child = iterator.next()
-            if (child.name == entityName) {
-                iterator.remove() // Remove the child safely using the iterator
-            } else {
-                removeEntityRecursively(child, entityName)
-
-            }
-        }
-    }
-
-    fun editEntity(oldName: String, newName: String){
-        editEntityRecursively(getRootEntity(), oldName, newName)
-    }
-
-    private fun editEntityRecursively(entity:XMLEntity, oldName: String, newName: String){
-        if(entity.name == oldName)
-            entity.name = newName
-        for(child in entity.childrens)
-            editEntityRecursively(child,newName, oldName)
-    }
-
-    // adicionar atributo passando apenas o nome da entidade e o atributo (key,value)
-    fun addAttribute(entityName:String, key: String, value: String) {
-        addAttributeRecursively(getRootEntity(), entityName, key, value)
-    }
-
-    fun addAttributeRecursively(entity:XMLEntity?, entityName: String, key: String, value: String){
-        if (entity == null) return
-
-        if(entity.name == entityName)
-            entity.addAttribute(key,value)
-
-        for (child in entity.childrens)
-            addAttributeRecursively(child, entityName, key, value)
-    }
-
-    //
-    private fun applyAttributeRecursively(entity: XMLEntity?, key: String, value: String, accept: (String) -> Boolean, apply: (XMLEntity, String, String) -> Unit) {
-        if (entity == null) return
-
-        if (accept(entity.name)) {
-            apply(entity, key, value)
-        }
-
-        for (child in entity.childrens) {
-            applyAttributeRecursively(child, key, value, accept, apply)
-        }
-    }
-
-    //adiciona um atributo a todas as entidades com determinado nome através de uma função de 2a ordem em que o user escreve a condição que quer ver satisfeita para que seja adicionado esse atributo
-
-    fun addToAllEntitiesAttribute(key: String, value: String, accept: (String) -> Boolean) {
-        val rootEntity = getRootEntity()
-        applyAttributeRecursively(rootEntity, key, value, accept) { entity, k, v ->
-            entity.addAttribute(k, v)
-        }
-    }
-    fun removeToAllEntitiesAttribute(key: String, value: String, accept: (String) -> Boolean) {
-        val rootEntity = getRootEntity()
-        applyAttributeRecursively(rootEntity, key, value, accept) { entity, k, _ ->
-            entity.removeAttribute(k)
-        }
-    }
-
     fun addAttributeVisitor(key:String, value:String, accept: (String) -> Boolean){
+        validateName(key, "Attribute Name")
+        validateName(value, "Attribute Value")
+
         val attribute = XMLAttributeOperator(key,value, XMLAttributeOperator.Operation.ADD, accept)
         getRootEntity().accept(attribute)
     }
 
     fun removeAttributeVisitor(key:String, accept: (String) -> Boolean){
+        validateName(key, "Attribute Name")
         val attribute = XMLAttributeOperator(key, null, XMLAttributeOperator.Operation.REMOVE, accept)
         getRootEntity().accept(attribute)
     }
 
     fun editAttributeVisitor(key:String, value: String, accept: (String) -> Boolean){
+        validateName(key, "Attribute Name")
+        validateName(value, "Attribute Value")
+
         val attribute = XMLAttributeOperator(key, value, XMLAttributeOperator.Operation.EDIT, accept)
         getRootEntity().accept(attribute)
     }
 
     fun addEntityVisitor(entityName:String,accept: (String) -> Boolean){
+        validateName(entityName, "Entity Name")
         val entity = XMLEntityOperator(null, entityName, XMLEntityOperator.Operation.ADD,accept)
         getRootEntity().accept(entity)
     }
@@ -169,11 +68,14 @@ data class XMLDocument(
     }
 
     fun editEntityVisitor(newName:String, accept: (String) -> Boolean){
+        validateName(newName, "Entity Name")
         val entity = XMLEntityOperator(newName,null, XMLEntityOperator.Operation.EDIT, accept)
         getRootEntity().accept(entity)
     }
 
     fun toXML(name: String, savePath: String = "${name}.xml"){
+        validateName(name, "Entity Name")
+
         val xmlCollector = XMLTextCollector()
         xmlCollector.collectedText = specifications
         getRootEntity().accept(xmlCollector)
@@ -192,8 +94,8 @@ data class XMLDocument(
         for (part in parts) {
             val newEntities = mutableListOf<XMLEntity>()
             for (entity in currentEntities) {
-                for (child in entity.childrens) {
-                    if (child.name == part) {
+                for (child in entity.children) {
+                    if (child.entityName == part) {
                         newEntities.add(child)
                     }
                 }
@@ -206,81 +108,20 @@ data class XMLDocument(
     }
 }
 
-fun main(){
-    val a = XMLEntity("a")
-    val b = XMLEntity("b", a)
-    val b2 = XMLEntity("b", a,hashMapOf("anoFabricação" to "1938"))
-    val b3 = XMLEntity("b", a,hashMapOf("Banshee" to "44"))
-    val c = XMLEntity("c", a)
-    val d = XMLEntity("d", b)
-    val e = XMLEntity("e", d)
-    val doc = XMLDocument(a)
-    println(doc.toTree())
-    doc.addEntityVisitor("f"){entityName -> entityName == "e"}
-    println("___________________________________")
-    println(doc.toTree())
-
-    println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
-    doc.removeEntityVisitor { entityName -> entityName == "b" }
-    println(doc.toTree())
-    //doc.addAttribute(b.name, "código", "231")
-    //doc.addToAllEntitiesAttribute("Cayde", "06"){entityName-> entityName== "b"}
-
-    doc.addAttributeVisitor("Banshee", "44"){entityName -> entityName == "b anoFabricação=\"1938\""}
-    //println(b2.fullName)
-    //println(b.fullName)
-/*    doc.removeAttributeVisitor("Banshee"){entityName -> entityName.startsWith("b") }
-    println(b.getAttributes())
-    println(b2.getAttributes())
-    */
-    println("__________________________________________________")
-    doc.editAttributeVisitor("Banshee", "98"){entityName -> entityName.startsWith("b")}
-    println(b.getAttributes())
-   // println(b2.getAttributes())
-
-    doc.removeAttributeVisitor("Banshee"){entityName -> entityName.startsWith("b") && !entityName.contains("anoFabricação")}
-
-    println("_____________________________________________________")
-    println(b.getAttributes())
-
-    println("refjvifhbnglerjeriknerftgrntulwbrlutghbnrwuitghrwuftgburetfhgnrutfgirithwg")
-    println(c.name)
-    doc.editEntityVisitor("c4"){entityName -> entityName.startsWith("c")}
-    println(c.name)
-    println("efrlureutgyilwregtyiareluftgilreatgyrealçauihgierrtgh8ireft48gg478w5gueil")
-/*
-    println(b2.getAttributes())
-    println(b3.getAttributes())
-*/
-    //println(doc.printAllEntities())
-   /* doc.addEntity("b",a.name)
-    doc.addEntity("c",a.name)
-    doc.addEntity("d",b.name)
-    doc.addEntity("e",d.name)*/
-    //doc.printAllEntities()
-    //println(doc.getRootEntity().childrens)
-   /* println("_______________________________________________________________________")
-    print(doc.addEntity("e", d.name))
-    println("EPAH pleasee")
-    println(doc.toTree())
-    println("_______________________________________________________________________")*/
-    //doc.removeEntity("b")
-    //doc.printAllEntities()
-    //println(doc.getRootEntity().childrens.forEach{c -> println(c)})
-}
-
 interface XMLVisitor{
     fun visit(entity: XMLEntity)
     fun endVisit(entity: XMLEntity){}
 }
-
 
 class XMLToTree :XMLVisitor{
     var collectedText:String = ""
     private var indentationLevel: Int = 0
 
     override fun visit(entity: XMLEntity) {
-        collectedText += "\t".repeat(indentationLevel)+ "﹂" + entity.name + "\n"
+        if(indentationLevel>0)
+            collectedText += "|".repeat(indentationLevel)+ "-"+ entity.entityName + "\n"
+        else
+            collectedText += entity.entityName + "\n"
         indentationLevel++
     }
 
@@ -294,7 +135,6 @@ class XMLEntityOperator(
     private val operation: Operation,
     private val accept: (String) -> Boolean
 ): XMLVisitor{
-
     private var listToRemove: MutableList<XMLEntity> = mutableListOf()
     init{
         if(operation == Operation.ADD){
@@ -310,7 +150,6 @@ class XMLEntityOperator(
     enum class Operation{
         ADD, EDIT, REMOVE
     }
-
     override fun visit(entity: XMLEntity) {
         if(accept(entity.fullName)){
             if(operation == Operation.ADD){
@@ -324,14 +163,13 @@ class XMLEntityOperator(
             }
             if(operation == Operation.EDIT){
                 if (newName != null) {
-                    entity.name = newName
+                    entity.entityName = newName
                 }
             }
         }
     }
-
     fun removeFromList(){
-        listToRemove.forEach { a -> a.parent?.childrens?.remove(a) }
+        listToRemove.forEach { a -> a.parent?.children?.remove(a) }
         println("Lista a remover" + listToRemove)
     }
 }
@@ -342,7 +180,6 @@ class XMLAttributeOperator(
     private val operation: Operation,
     private val accept: (String) -> Boolean
 ): XMLVisitor {
-
     enum class Operation{
         ADD,EDIT,REMOVE
     }
@@ -364,8 +201,8 @@ class XMLAttributeOperator(
             }
         }
     }
-
 }
+
 class XMLTextCollector : XMLVisitor {
     var collectedText:String = ""
     private var indentationLevel: Int = 0
@@ -391,15 +228,40 @@ class XMLTextCollector : XMLVisitor {
     }
 }
 data class XMLEntity(
-    var name: String,
+    private var name: String,
     var parent: XMLEntity? = null,
     private var attributesMap: HashMap<String,String>? = null,
     private var plainText:String? = ""
 ) {
-    val childrens = mutableListOf<XMLEntity>()
-    init{
-        parent?.childrens?.add(this)
+    private fun validateName(entityName: String, variableName: String) {
+        // Validate entity name to ensure it doesn't contain spaces
+        if (entityName.contains(" ")) {
+            throw IllegalArgumentException("$variableName cannot contain spaces.")
+        }
+
+        // Validate entity name to ensure it doesn't contain special characters
+        if (!entityName.matches(Regex("[a-zA-Z0-9_\\-]+"))) {
+            throw IllegalArgumentException("$variableName can only contain alphanumeric characters, underscores, and hyphens.")
+        }
+
+        // Add more validations as needed
     }
+
+    val children = mutableListOf<XMLEntity>()
+    init{
+        validateName(name, "Entity Name")
+        parent?.children?.add(this)
+    }
+
+    var entityName: String
+        get(){
+            return name
+        }
+        set(value){
+            validateName(value, "Entity Name")
+            name=value
+        }
+
 
     var entityPlainText: String?
         get() = plainText
@@ -414,7 +276,7 @@ data class XMLEntity(
         }
     val isSelfClosing:Boolean
         get() {
-            return childrens.isEmpty() && plainText == ""
+            return children.isEmpty() && plainText == ""
         }
     val xmlBegginerTag: String
         get() {
@@ -486,7 +348,7 @@ data class XMLEntity(
     }
     fun accept(v: XMLVisitor) {
         v.visit(this)
-        childrens.forEach {
+        children.forEach {
             it.accept(v)
         }
         v.endVisit(this)
