@@ -4,8 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a7c901fa-b7bb-48ae-a020-fe9867977a67" name="Changes" comment="Dou um commit">
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+    <list default="true" id="a7c901fa-b7bb-48ae-a020-fe9867977a67" name="Changes" comment="Aperaltado">
+      <change afterPath="$PROJECT_DIR$/src/test/kotlin/TestReflection.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/kotlin/XMLDocument.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/XMLDocument.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/test/kotlin/TestXML.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/kotlin/TestXML.kt" afterDir="false" />
@@ -35,39 +35,61 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Downloaded.Files.Path.Enabled&quot;: &quot;false&quot;,
-    &quot;JUnit.TestXML.createEntity.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.TestXML.testAddEntity.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.TestXML.testAttributeVisitors.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.TestXML.testAttributes.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.TestXML.testCreateEntity.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.TestXML.testRemoveEntity.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.TestXML.testToXML.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.TestXML.testVisitors.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.TestXML.testXPath.executor&quot;: &quot;Run&quot;,
-    &quot;Kotlin.XMLDocumentKt.executor&quot;: &quot;Run&quot;,
-    &quot;Repository.Attach.Annotations&quot;: &quot;false&quot;,
-    &quot;Repository.Attach.JavaDocs&quot;: &quot;false&quot;,
-    &quot;Repository.Attach.Sources&quot;: &quot;false&quot;,
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
-    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Project&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Downloaded.Files.Path.Enabled": "false",
+    "JUnit.TestReflection.createComplexEntityThroughClass.executor": "Run",
+    "JUnit.TestReflection.createSimpleEntityThroughClass.executor": "Run",
+    "JUnit.TestXML.createEntity.executor": "Run",
+    "JUnit.TestXML.testAddEntity.executor": "Run",
+    "JUnit.TestXML.testAttributeVisitors.executor": "Run",
+    "JUnit.TestXML.testAttributes.executor": "Run",
+    "JUnit.TestXML.testCreateEntity.executor": "Run",
+    "JUnit.TestXML.testRemoveEntity.executor": "Run",
+    "JUnit.TestXML.testToXML.executor": "Run",
+    "JUnit.TestXML.testVisitors.executor": "Run",
+    "JUnit.TestXML.testXPath.executor": "Run",
+    "Kotlin.XMLDocumentKt.executor": "Run",
+    "Repository.Attach.Annotations": "false",
+    "Repository.Attach.JavaDocs": "false",
+    "Repository.Attach.Sources": "false",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "master",
+    "ignore.virus.scanning.warn.message": "true",
+    "kotlin-language-version-configured": "true",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "project.structure.last.edited": "Project",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.2",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
-  <component name="RunManager" selected="JUnit.TestXML.testAttributeVisitors">
+}]]></component>
+  <component name="RunManager" selected="JUnit.TestReflection.createComplexEntityThroughClass">
+    <configuration name="TestReflection.createComplexEntityThroughClass" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="PA24_XMLAPI" />
+      <option name="PACKAGE_NAME" value="" />
+      <option name="MAIN_CLASS_NAME" value="TestReflection" />
+      <option name="METHOD_NAME" value="createComplexEntityThroughClass" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="TestReflection.createSimpleEntityThroughClass" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="PA24_XMLAPI" />
+      <option name="PACKAGE_NAME" value="" />
+      <option name="MAIN_CLASS_NAME" value="TestReflection" />
+      <option name="METHOD_NAME" value="createSimpleEntityThroughClass" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="TestXML.testAddEntity" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="PA24_XMLAPI" />
       <option name="PACKAGE_NAME" value="" />
@@ -88,40 +110,23 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="TestXML.testCreateEntity" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="TestXML.testToXML" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="PA24_XMLAPI" />
       <option name="PACKAGE_NAME" value="" />
       <option name="MAIN_CLASS_NAME" value="TestXML" />
-      <option name="METHOD_NAME" value="testCreateEntity" />
+      <option name="METHOD_NAME" value="testToXML" />
       <option name="TEST_OBJECT" value="method" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="TestXML.testXPath" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="PA24_XMLAPI" />
-      <option name="PACKAGE_NAME" value="" />
-      <option name="MAIN_CLASS_NAME" value="TestXML" />
-      <option name="METHOD_NAME" value="testXPath" />
-      <option name="TEST_OBJECT" value="method" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="XMLDocumentKt" type="JetRunConfigurationType" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="XMLDocumentKt" />
-      <module name="PA24_XMLAPI" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="JUnit.TestReflection.createComplexEntityThroughClass" />
+        <item itemvalue="JUnit.TestXML.testToXML" />
+        <item itemvalue="JUnit.TestReflection.createSimpleEntityThroughClass" />
         <item itemvalue="JUnit.TestXML.testAttributeVisitors" />
         <item itemvalue="JUnit.TestXML.testAddEntity" />
-        <item itemvalue="JUnit.TestXML.testCreateEntity" />
-        <item itemvalue="Kotlin.XMLDocumentKt" />
-        <item itemvalue="JUnit.TestXML.testXPath" />
       </list>
     </recent_temporary>
   </component>
@@ -147,7 +152,8 @@
       <workItem from="1713200477463" duration="17208000" />
       <workItem from="1713283945118" duration="19677000" />
       <workItem from="1713342370577" duration="3286000" />
-      <workItem from="1715876811344" duration="3219000" />
+      <workItem from="1715876811344" duration="3312000" />
+      <workItem from="1716212118352" duration="8540000" />
     </task>
     <task id="LOCAL-00001" summary="First commit">
       <option name="closed" value="true" />
@@ -237,11 +243,30 @@
       <option name="project" value="LOCAL" />
       <updated>1713342555082</updated>
     </task>
-    <option name="localTasksCounter" value="12" />
+    <task id="LOCAL-00012" summary="Aperaltado">
+      <option name="closed" value="true" />
+      <created>1715880072175</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1715880072175</updated>
+    </task>
+    <option name="localTasksCounter" value="13" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="First commit" />
@@ -255,6 +280,7 @@
     <MESSAGE value="addEntity e removeEntity alegadamente a funcionar. Adicionei também um método ao XMLDocument para dar print de todos os filhos (este metodo ainda precisa de ser trabalhado). Nao testei com o assertEquals o removeEntity" />
     <MESSAGE value="Entretém-te" />
     <MESSAGE value="Dou um commit" />
-    <option name="LAST_COMMIT_MESSAGE" value="Dou um commit" />
+    <MESSAGE value="Aperaltado" />
+    <option name="LAST_COMMIT_MESSAGE" value="Aperaltado" />
   </component>
 </project>

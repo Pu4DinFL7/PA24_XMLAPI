@@ -1,5 +1,8 @@
 import java.io.File
 import java.io.PrintWriter
+import kotlin.reflect.KClass
+import kotlin.reflect.full.declaredMemberProperties
+import kotlin.reflect.full.findAnnotation
 
 data class XMLDocument(
     private val rootEntity: XMLEntity,
@@ -71,6 +74,12 @@ data class XMLDocument(
         validateName(newName, "Entity Name")
         val entity = XMLEntityOperator(newName,null, XMLEntityOperator.Operation.EDIT, accept)
         getRootEntity().accept(entity)
+    }
+
+    fun getEntities(accept: (XMLEntity) -> Boolean): List<XMLEntity>{
+        val entitiesVisitor = XMLEnitityGetter(accept)
+        getRootEntity().accept(entitiesVisitor)
+        return entitiesVisitor.entities
     }
 
     fun toXML(name: String, savePath: String = "${name}.xml"){
@@ -227,13 +236,31 @@ class XMLTextCollector : XMLVisitor {
 
     }
 }
+
+class XMLEnitityGetter(val accept: (XMLEntity) -> Boolean) : XMLVisitor {
+    var entities:MutableList<XMLEntity> = mutableListOf<XMLEntity>()
+    override fun visit(entity: XMLEntity) {
+        if(accept(entity))
+            entities.add(entity)
+    }
+}
+
 data class XMLEntity(
     private var name: String,
     var parent: XMLEntity? = null,
     private var attributesMap: HashMap<String,String>? = null,
     private var plainText:String? = ""
 ) {
+
+    @Target(AnnotationTarget.CLASS)
+    annotation class XMLName(val name: String)
+    @Target(AnnotationTarget.PROPERTY)
+    annotation class EntityXML
+    @Target(AnnotationTarget.PROPERTY)
+    annotation class XMLIgnore
+
     private fun validateName(entityName: String, variableName: String) {
+
         // Validate entity name to ensure it doesn't contain spaces
         if (entityName.contains(" ")) {
             throw IllegalArgumentException("$variableName cannot contain spaces.")
@@ -253,6 +280,40 @@ data class XMLEntity(
         parent?.children?.add(this)
     }
 
+    constructor(obj: Any, parent: XMLEntity? = null) : this(obj::class.simpleName ?: throw IllegalArgumentException("Cannot be null"), parent) {
+        val clazz = obj::class
+
+        if (clazz.findAnnotation<XMLName>() != null) {
+            entityName = clazz.findAnnotation<XMLName>()!!.name
+            //println(" DASSSSSSSS AUTO " + clazz.findAnnotation<XMLName>()!!.name)
+        }
+
+        for (property in clazz.declaredMemberProperties) {
+            println("aa " + property)
+            val value = property.call(obj)
+
+            if (property.findAnnotation<XMLIgnore>() != null) {
+                // println("Property ${property.name} is ignored due to XMLIgnore annotation")
+                continue
+            }
+            // println("Processing property: ${property.name}")
+
+            when {
+                property.findAnnotation<EntityXML>() != null && value != null -> {
+                    XMLEntity(value, this)
+                    println("Im coming for you bowser " + value.toString())
+                }
+
+                else -> {
+                    if (value != null) {
+                        addAttribute(property.name, value.toString())
+                        // println("IT'SSS MEEEEEEEEE MARIO " + value.toString())
+                    }
+                }
+            }
+        }
+    }
+
     var entityName: String
         get(){
             return name
@@ -261,7 +322,6 @@ data class XMLEntity(
             validateName(value, "Entity Name")
             name=value
         }
-
 
     var entityPlainText: String?
         get() = plainText
@@ -352,5 +412,10 @@ data class XMLEntity(
             it.accept(v)
         }
         v.endVisit(this)
+    }
+
+
+    override fun toString(): String {
+       return fullName
     }
 }

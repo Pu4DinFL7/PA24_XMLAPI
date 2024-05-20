@@ -104,6 +104,8 @@ class TestXML {
         comp32.addAllAttributes(hashMapOf("nome" to "Discussão", "peso" to "20%"))
 
         doc.toXML("exEnunciado")
+        assertEquals(15, doc.getEntities { true }.size)
+
     }
 
     @Test
