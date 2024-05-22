@@ -4,6 +4,27 @@ import kotlin.reflect.KClass
 import kotlin.reflect.full.declaredMemberProperties
 import kotlin.reflect.full.findAnnotation
 
+
+@Target(AnnotationTarget.CLASS)
+annotation class XMLName(val name: String)
+@Target(AnnotationTarget.PROPERTY)
+annotation class EntityXML
+@Target(AnnotationTarget.PROPERTY)
+annotation class XMLIgnore
+
+/*
+@Target(AnnotationTarget.PROPERTY)
+annotation class XMLString(val clazz: KClass<out >)
+
+*/
+
+private fun validateName(entityName: String, variableName: String) {
+
+    // Validate entity name to ensure it doesn't contain special characters
+    if (!entityName.matches(Regex("[a-zA-Z0-9_]+"))) {
+        throw IllegalArgumentException("$variableName can only contain alphanumeric characters, underscores, and hyphens.")
+    }
+}
 data class XMLDocument(
     private val rootEntity: XMLEntity,
     var version:String? = "1.0",
@@ -14,16 +35,6 @@ data class XMLDocument(
         get() {
             return "<?xml version=\"$version\" encoding=\"$encoding\"?>"
         }
-
-    private fun validateName(entityName: String, variableName: String) {
-        if (entityName.contains(" ")) {
-            throw IllegalArgumentException("$variableName cannot contain spaces.")
-        }
-
-        if (!entityName.matches(Regex("[a-zA-Z0-9_\\-]+"))) {
-            throw IllegalArgumentException("$variableName can only contain alphanumeric characters, underscores, and hyphens.")
-        }
-    }
 
     fun toTree(): String {
         val rootEntity = getRootEntity()
@@ -251,28 +262,6 @@ data class XMLEntity(
     private var attributesMap: HashMap<String,String>? = null,
     private var plainText:String? = ""
 ) {
-
-    @Target(AnnotationTarget.CLASS)
-    annotation class XMLName(val name: String)
-    @Target(AnnotationTarget.PROPERTY)
-    annotation class EntityXML
-    @Target(AnnotationTarget.PROPERTY)
-    annotation class XMLIgnore
-
-    private fun validateName(entityName: String, variableName: String) {
-
-        // Validate entity name to ensure it doesn't contain spaces
-        if (entityName.contains(" ")) {
-            throw IllegalArgumentException("$variableName cannot contain spaces.")
-        }
-
-        // Validate entity name to ensure it doesn't contain special characters
-        if (!entityName.matches(Regex("[a-zA-Z0-9_\\-]+"))) {
-            throw IllegalArgumentException("$variableName can only contain alphanumeric characters, underscores, and hyphens.")
-        }
-
-        // Add more validations as needed
-    }
 
     val children = mutableListOf<XMLEntity>()
     init{

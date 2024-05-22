@@ -3,12 +3,12 @@ import org.junit.jupiter.api.Test
 
 class TestReflection {
 
-    @XMLEntity.XMLName("persona")
+    @XMLName("persona")
     data class Person(
         val name: String,
         val age: Int,
-        @XMLEntity.XMLIgnore val password: String,
-        @XMLEntity.EntityXML val address: Address
+        @XMLIgnore val password: String,
+        @EntityXML val address: Address
     )
 
 
