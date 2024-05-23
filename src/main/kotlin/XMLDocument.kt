@@ -21,21 +21,33 @@ annotation class XMLString(val clazz: KClass<out >)
 
 
 /**
- * Validates that the given string contains only alphanumeric characters, underscores, and hyphens.
+ * Validates that the given string starts with a letter or underscore and contains only alphanumeric characters, underscores, periods and hyphens.
  *
- * This function checks if the provided string matches the specified regex pattern. If the string
- * contains any characters other than alphanumeric characters, underscores, or hyphens, it throws
- * an `IllegalArgumentException`.
+
  *
  * @param stringToTest The string to be validated.
  * @param variableName The name of the variable being validated, used in the exception message.
  * @throws IllegalArgumentException if the string contains invalid characters.
  */
-private fun validateAlphaNumericOnly(stringToTest: String, variableName: String) {
-
-    if (!stringToTest.matches(Regex("[a-zA-Z0-9_]+"))) {
-        throw IllegalArgumentException("$variableName can only contain alphanumeric characters, underscores, and hyphens.")
+private fun validateString(stringToTest: String, variableName: String){
+    if (!stringToTest.matches(Regex("^[_a-zA-ZÀ-ÖØ-öø-üÀ-Üà-öø-ÿº0-9.-]*\$"))) {
+        throw IllegalArgumentException("$variableName must start with a letter or underscore and can only contain alphanumeric characters, underscores, periods and hyphens.")
     }
+}
+
+/**
+ * Escapes special characters in the input string to ensure it is safe for use in XML.
+ * Replaces characters such as '&', '<', '>', '"', and "'" with their corresponding XML entities.
+ *
+ * @param stringToEscape The input string to be escaped.
+ * @return The escaped string.
+ */
+private fun escapeText(stringToEscape: String): String{
+    return stringToEscape.replace("&", "&amp;")
+        .replace("<", "&lt;")
+        .replace(">", "&gt;")
+        .replace("\"", "&quot;")
+        .replace("'", "&apos;")
 }
 
 /**
@@ -115,11 +127,9 @@ data class XMLDocument(
     /**
      * The root entity of the XML document.
      */
-    var rootEntity: XMLEntity
+    val rootEntity: XMLEntity
         get() = _rootEntity
-        set(value) {
-            _rootEntity = value
-        }
+
 
     /**
      * Converts the XML document to a tree representation.
@@ -129,7 +139,7 @@ data class XMLDocument(
     fun toTree(): String {
         val tree = XMLToTree()
         rootEntity.accept(tree)
-        return tree.collectedText.trim()
+        return tree.toTreeString().trim()
     }
 
     /**
@@ -140,10 +150,9 @@ data class XMLDocument(
      *
      */
     fun addAttribute(name:String, value:String, accept: (String) -> Boolean){
-        validateAlphaNumericOnly(name, "Attribute Name")
-        validateAlphaNumericOnly(value, "Attribute Value")
+        validateString(name, "Attribute Name")
 
-        val attribute = XMLAttributeOperator(name,value, XMLAttributeOperator.Operation.ADD, accept)
+        val attribute = XMLAttributeOperator(name,escapeText(value), XMLAttributeOperator.Operation.ADD, accept)
         rootEntity.accept(attribute)
     }
 
@@ -154,7 +163,7 @@ data class XMLDocument(
      *
      */
     fun removeAttribute(name:String, accept: (String) -> Boolean){
-        validateAlphaNumericOnly(name, "Attribute Name")
+        validateString(name, "Attribute Name")
         val attribute = XMLAttributeOperator(name, null, XMLAttributeOperator.Operation.REMOVE, accept)
         rootEntity.accept(attribute)
     }
@@ -168,10 +177,9 @@ data class XMLDocument(
      *
      */
     fun editAttribute(name:String, newValue: String, accept: (String) -> Boolean){
-        validateAlphaNumericOnly(name, "Attribute Name")
-        validateAlphaNumericOnly(newValue, "Attribute Value")
+        validateString(name, "Attribute Name")
 
-        val attribute = XMLAttributeOperator(name, newValue, XMLAttributeOperator.Operation.EDIT, accept)
+        val attribute = XMLAttributeOperator(name, escapeText(newValue), XMLAttributeOperator.Operation.EDIT, accept)
         rootEntity.accept(attribute)
     }
 
@@ -182,7 +190,7 @@ data class XMLDocument(
      * @param accept A lambda function that defines the acceptance criteria for the parent entities by comparing entity.fullName.
      */
     fun addEntity(entityName:String, accept: (String) -> Boolean){
-        validateAlphaNumericOnly(entityName, "Entity Name")
+        validateString(entityName, "Entity Name")
         val entity = XMLEntityOperator(null, entityName, XMLEntityOperator.Operation.ADD,accept)
         rootEntity.accept(entity)
     }
@@ -203,7 +211,7 @@ data class XMLDocument(
      * @param accept A lambda function that defines the acceptance criteria for entities by comparing entity.fullName.
      */
     fun renameEntity(newName:String, accept: (String) -> Boolean){
-        validateAlphaNumericOnly(newName, "Entity Name")
+        validateString(newName, "Entity Name")
         val entity = XMLEntityOperator(newName,null, XMLEntityOperator.Operation.EDIT, accept)
         rootEntity.accept(entity)
     }
@@ -234,8 +242,6 @@ data class XMLDocument(
      * @param savePath The path where the XML document should be saved. Default is "$name.xml".
      */
     fun toXML(name: String, savePath: String = "${name}.xml"){
-        validateAlphaNumericOnly(name, "Entity Name")
-
         val xmlCollector = XMLTextCollector()
         xmlCollector.collectedText = specifications
         rootEntity.accept(xmlCollector)
@@ -297,20 +303,39 @@ interface XMLVisitor{
 /**
  * Converts XML to a tree structure.
  */
- class XMLToTree :XMLVisitor{
-    var collectedText:String = ""
-    private var indentationLevel: Int = 0
+class XMLToTree : XMLVisitor {
+    private val stringBuilder = StringBuilder()
+    private var indentationLevel = 0
 
     override fun visit(entity: XMLEntity) {
-        if(indentationLevel>0)
-            collectedText += "|".repeat(indentationLevel)+ "-"+ entity.name + "\n"
-        else
-            collectedText += entity.name + "\n"
+        appendIndentation(entity)
+        stringBuilder.append(entity.name)
+        stringBuilder.append("\n")
         indentationLevel++
     }
 
     override fun endVisit(entity: XMLEntity) {
         indentationLevel--
+        if (indentationLevel < 0) {
+            indentationLevel = 0
+        }
+    }
+
+    private fun appendIndentation(entity: XMLEntity) {
+        if (indentationLevel > 0) {
+            stringBuilder.append("│   ".repeat(indentationLevel-1))
+
+            var isLastChild = false
+            if (entity.parent != null) {
+                val siblings = entity.parent!!.children
+                isLastChild = siblings.indexOf(entity) == siblings.size - 1
+            }
+            stringBuilder.append(if (isLastChild)  "└── " else "├── ")
+        }
+    }
+
+    fun toTreeString(): String {
+        return stringBuilder.toString()
     }
 }
 
@@ -468,7 +493,8 @@ data class XMLEntity(
      */
     val children = mutableListOf<XMLEntity>()
     init{
-        validateAlphaNumericOnly(_name, "Entity Name")
+        validateString(_name, "Entity Name")
+        _plainText = _plainText?.let { escapeText(it) }
         parent?.children?.add(this)
     }
 
@@ -519,7 +545,7 @@ data class XMLEntity(
             return _name
         }
         set(value){
-            validateAlphaNumericOnly(value, "Entity Name")
+            validateString(value, "Entity Name")
             _name=value
         }
 
@@ -529,7 +555,7 @@ data class XMLEntity(
     var plainText: String?
         get() = _plainText
         set(value) {
-            _plainText = value
+            _plainText = value?.let { escapeText(it) }
         }
 
     /**
@@ -566,14 +592,19 @@ data class XMLEntity(
      * Adds an attribute to the entity.
      * @param attribute The name of the attribute to add.
      * @param value The value of the attribute to add.
+     * @throws IllegalArgumentException if the attribute already exists in the entity.
      */
     fun addAttribute(attribute: String, value: String){
+        validateString(attribute, "Attribute Name")
         if (attributesMap == null) {
             // Create a new LinkedHashMap and add the key-value pair
-            attributesMap = linkedMapOf(attribute to value)
+            attributesMap = linkedMapOf(attribute to escapeText(value))
         } else {
+            if(attributesMap!!.containsKey(attribute))
+                throw IllegalArgumentException("$attribute already exists! To change its value, use editAttribute.")
+
             // Add the key-value pair to the existing LinkedHashMap
-            attributesMap!![attribute] = value
+            attributesMap!![attribute] = escapeText(value)
         }
     }
 
@@ -584,8 +615,6 @@ data class XMLEntity(
     fun removeAttribute(attribute: String){
         if(attributesMap?.containsKey(attribute) == true)
             attributesMap?.remove(attribute)
-       /* else
-            throw NoSuchAttributeException(""+this.name+" does not have such attribute")*/
     }
 
     /**
@@ -594,23 +623,27 @@ data class XMLEntity(
      * @param newValue The new value for the attribute.
      */
     fun editAttribute(attribute: String, newValue: String){
+
         if(attributesMap?.containsKey(attribute) == true)
-            attributesMap?.put(attribute, newValue)
-        /*else
-            throw NoSuchAttributeException(""+this.name+" does not have such attribute")*/
+            attributesMap?.put(attribute, escapeText(newValue))
+
     }
 
     /**
      * Adds multiple attributes to the entity.
      * @param attributes A map containing the attributes to add.
+     * @throws IllegalArgumentException if any attribute already exists in the entity.
      */
     fun addAllAttributes(attributes: LinkedHashMap<String, String>){
+
         if (attributesMap == null) {
-            // Create a new LinkedHashMap and add the key-value pair
-            attributesMap = attributes
-        } else {
-            // Add the key-value pair to the existing LinkedHashMap
-            attributesMap!!.putAll(attributes)
+            attributesMap = LinkedHashMap()
+        }
+        for ((key, value) in attributes) {
+            if(attributesMap!!.containsKey(key))
+                throw IllegalArgumentException("$key already exists! To change its value, use editAttribute.")
+            validateString(key, "Attribute Name")
+            attributesMap!![key] = escapeText(value)
         }
     }
 
@@ -639,7 +672,7 @@ data class XMLEntity(
     fun editAllAttributes(accept: (String, String) -> Boolean, newValue: String){
         attributesMap?.forEach{ (key, value) ->
             if(accept(key, value))
-                attributesMap!![key] = newValue
+                attributesMap!![key] = escapeText(newValue)
         }
     }
 
@@ -678,3 +711,47 @@ data class XMLEntity(
        return fullName
     }
 }
+
+fun xmlDocument(buildToCreateDoc: XMLDocumentBuilder.() -> Unit, documentBuild: XMLDocument.() -> Unit = {}) {
+    val builder = XMLDocumentBuilder()
+    builder.buildToCreateDoc()
+    val document = builder.buildDocument()
+    document.apply(documentBuild)
+}
+
+class XMLDocumentBuilder {
+    private var rootEntity: XMLEntity? = null
+    private var version: String? = "1.0"
+    private var encoding: String? = "UTF-8"
+
+    fun version(version: String) {
+        this.version = version
+    }
+
+    fun encoding(encoding: String) {
+        this.encoding = encoding
+    }
+
+    fun root(name: String, build: XMLEntity.() -> Unit = {}) {
+        if(rootEntity != null)
+            throw IllegalArgumentException("This document already has a root entity!")
+        rootEntity = XMLEntity(name).apply {
+            build(this)
+        }
+    }
+
+    fun buildDocument(): XMLDocument {
+        requireNotNull(rootEntity) { "Root entity must be specified" }
+        return XMLDocument(rootEntity!!, version, encoding)
+    }
+}
+
+fun xmlEntity(name: String, build: XMLEntity.() -> Unit = {}) =
+    XMLEntity(name).apply {
+        build(this)
+    }
+
+fun XMLEntity.child(name: String, build: XMLEntity.() -> Unit = {}) =
+    XMLEntity(name, this).apply {
+        build(this)
+    }

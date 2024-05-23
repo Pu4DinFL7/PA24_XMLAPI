@@ -10,6 +10,9 @@ class TestXML {
         *  Entity Creation
         */
         assertThrows<IllegalArgumentException> { XMLEntity("|") }
+        val test = XMLEntity("toTest")
+        test.addAttribute("notSpecialName",  "Spe<ial\"\" Nam&")
+
         val irithyll = XMLEntity("irithyll")
         val sulyvahnsbeast = XMLEntity("sullyvahnsbeast", irithyll)
         val pontiffsullyvahn = XMLEntity("pontiffsullyvahn", irithyll)
@@ -31,8 +34,8 @@ class TestXML {
         pontiffsullyvahn.addAttribute("eyes", "2")
         pontiffsullyvahn.addAllAttributes(linkedMapOf("anatomy" to "humanoid", "respawn" to "false", "swords" to "1"))
         assertEquals(linkedMapOf("eyes" to "2", "anatomy" to "humanoid", "respawn" to "false", "swords" to "1"), pontiffsullyvahn.getAttributes())
-        pontiffsullyvahn.addAttribute("swords", "2")
-        assertEquals(linkedMapOf("eyes" to "2", "anatomy" to "humanoid", "respawn" to "false", "swords" to "2"), pontiffsullyvahn.getAttributes())
+        assertThrows<IllegalArgumentException> {         pontiffsullyvahn.addAttribute("swords", "2") }
+        assertEquals(linkedMapOf("eyes" to "2", "anatomy" to "humanoid", "respawn" to "false", "swords" to "1"), pontiffsullyvahn.getAttributes())
 
 
         // Attribute Removal
@@ -43,6 +46,7 @@ class TestXML {
         assertEquals(linkedMapOf("eyes" to "6", "anatomy" to "canine", "respawn" to "false"), sulyvahnsbeast.getAttributes())
 
         //Attribute Edition
+        pontiffsullyvahn.editAttribute("swords", "2")
         pontiffsullyvahn.addAllAttributes(linkedMapOf("friendly" to "yes", "cute" to "yes", "non-frustrating" to "absolutely"))
         pontiffsullyvahn.editAttribute("year", "2011")
         pontiffsullyvahn.editAllAttributes({ s1, s2 -> s1 == "friendly" || s2 == "absolutely" || s1 == "cute"}, "AHA! You wish!")
