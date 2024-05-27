@@ -2,22 +2,45 @@ import java.io.File
 import java.io.PrintWriter
 import java.util.*
 import kotlin.collections.LinkedHashMap
-import kotlin.reflect.full.declaredMemberProperties
-import kotlin.reflect.full.findAnnotation
+import kotlin.reflect.KClass
+import kotlin.reflect.full.*
 
-
+/**
+ * Annotation to specify the XML name of a class.
+ *
+ * @property name The XML name of the class.
+ */
 @Target(AnnotationTarget.CLASS)
 annotation class XMLName(val name: String)
+
+/**
+ * Annotation to specify that a property should be translated into an Entity and added as a child.
+ * If the annotation is attached to a List then it will create Entities for each Object on the list.
+ */
 @Target(AnnotationTarget.PROPERTY)
 annotation class EntityXML
+
+/**
+ * Annotation to specify that a property should be ignored in the XML.
+ */
 @Target(AnnotationTarget.PROPERTY)
 annotation class XMLIgnore
 
-/*
+/**
+ * Annotation for specifying a [StringEdit] class to be used for editing a string property.
+ *
+ * @property clazz The [KClass] of the [StringEdit] implementation to be used.
+ */
 @Target(AnnotationTarget.PROPERTY)
-annotation class XMLString(val clazz: KClass<out >)
+annotation class XMLString(val clazz: KClass<out StringEdit>)
 
-*/
+/**
+ * Annotation for specifying an [EntityAdapter] class to be used for adapting an entity.
+ *
+ * @property clas The [KClass] of the [EntityAdapter] implementation to be used.
+ */
+@Target(AnnotationTarget.CLASS)
+annotation class XMLAdapter(val clas: KClass<out EntityAdapter>)
 
 
 /**
@@ -221,7 +244,7 @@ data class XMLDocument(
      * @param accept The acceptance criteria for the entities.
      * @return A list of entities matching the acceptance criteria.
      */
-    fun getEntities(accept: (XMLEntity) -> Boolean): List<XMLEntity>{
+    fun getEntities(accept: (XMLEntity) -> Boolean = {true}): List<XMLEntity>{
         val entitiesVisitor = XMLEntityGetter(accept)
         rootEntity.accept(entitiesVisitor)
         return entitiesVisitor.entities
@@ -507,32 +530,49 @@ data class XMLEntity(
         val clazz = obj::class
 
         if (clazz.findAnnotation<XMLName>() != null) {
-            _name = clazz.findAnnotation<XMLName>()!!.name
-            //println(" DASSSSSSSS AUTO " + clazz.findAnnotation<XMLName>()!!.name)
+            name = clazz.findAnnotation<XMLName>()!!.name
         }
 
         for (property in clazz.declaredMemberProperties) {
-            println("aa " + property)
             val value = property.call(obj)
 
-            if (property.findAnnotation<XMLIgnore>() != null) {
-                // println("Property ${property.name} is ignored due to XMLIgnore annotation")
-                continue
-            }
-            // println("Processing property: ${property.name}")
-
             when {
+                property.findAnnotation<XMLIgnore>() != null ->{
+                    continue
+                }
+
                 property.findAnnotation<EntityXML>() != null && value != null -> {
-                    XMLEntity(value, this)
-                    println("Im coming for you bowser " + value.toString())
+                    if(value is List<*>){
+                        value.forEach {c ->
+                            if (c != null) {
+                                XMLEntity(c, this)
+                            }
+                        }
+                    }else {
+                        XMLEntity(value, this)
+                    }
+                }
+
+                property.findAnnotation<XMLString>() != null ->{
+                    val str = property.findAnnotation<XMLString>()
+                    val aux = str?.clazz?.createInstance()?.change(value.toString())
+                    if (aux != null) {
+                        addAttribute(property.name, aux)
+                    }
                 }
 
                 else -> {
                     if (value != null) {
                         addAttribute(property.name, value.toString())
-                        // println("IT'SSS MEEEEEEEEE MARIO " + value.toString())
                     }
                 }
+            }
+
+            if(clazz.findAnnotation<XMLAdapter>() != null){
+                val adapterAnnotation = clazz.findAnnotation<XMLAdapter>()
+                val adapter = adapterAnnotation?.clas?.createInstance()
+                adapter?.adapt(this)
+
             }
         }
     }
@@ -692,6 +732,14 @@ data class XMLEntity(
     }
 
     /**
+     * Clears all attributes associated with this XML entity.
+     * If there are no attributes, this function has no effect.
+     */
+    fun clearAttributes() {
+        attributesMap?.clear()
+    }
+
+    /**
      * Accepts a visitor to visit the entity and its children.
      * @param visitor The XMLVisitor to accept.
      */
@@ -712,26 +760,81 @@ data class XMLEntity(
     }
 }
 
-fun xmlDocument(buildToCreateDoc: XMLDocumentBuilder.() -> Unit, documentBuild: XMLDocument.() -> Unit = {}) {
+
+/**
+ * Interface for editing a string value.
+ */
+interface StringEdit {
+    /**
+     * Changes the given string value.
+     *
+     * @param value The string value to be changed.
+     * @return The changed string value.
+     */
+    fun change(value: String): String
+}
+
+/**
+ * Interface for adapting an [XMLEntity].
+ */
+interface EntityAdapter {
+    /**
+     * Adapts the given [XMLEntity].
+     *
+     * @param entity The [XMLEntity] to be adapted.
+     * @return The adapted [XMLEntity].
+     */
+    fun adapt(entity: XMLEntity): XMLEntity
+}
+
+/**
+ * Creates an XML document using the specified builders for document structure and content.
+ *
+ * @param buildToCreateDoc A lambda function for building the structure of the XML document using an [XMLDocumentBuilder].
+ * @param documentBuild A lambda function for further building the content of the created [XMLDocument]. Default is an empty function.
+ * @return The created [XMLDocument].
+ */
+fun xmlDocument(buildToCreateDoc: XMLDocumentBuilder.() -> Unit, documentBuild: XMLDocument.() -> Unit = {}): XMLDocument {
     val builder = XMLDocumentBuilder()
     builder.buildToCreateDoc()
     val document = builder.buildDocument()
     document.apply(documentBuild)
+    return document
 }
 
+/**
+ * Builder class for creating an [XMLDocument].
+ */
 class XMLDocumentBuilder {
     private var rootEntity: XMLEntity? = null
     private var version: String? = "1.0"
     private var encoding: String? = "UTF-8"
 
+    /**
+     * Sets the version of the XML document.
+     *
+     * @param version The version of the XML document.
+     */
     fun version(version: String) {
         this.version = version
     }
 
+    /**
+     * Sets the encoding of the XML document.
+     *
+     * @param encoding The encoding of the XML document.
+     */
     fun encoding(encoding: String) {
         this.encoding = encoding
     }
 
+    /**
+     * Sets the root entity of the XML document.
+     *
+     * @param name The name of the root entity.
+     * @param build A lambda function for building the root entity.
+     * @throws IllegalArgumentException If the root entity is already set.
+     */
     fun root(name: String, build: XMLEntity.() -> Unit = {}) {
         if(rootEntity != null)
             throw IllegalArgumentException("This document already has a root entity!")
@@ -740,18 +843,79 @@ class XMLDocumentBuilder {
         }
     }
 
+    /**
+     * Builds and returns the XML document.
+     *
+     * @return The created [XMLDocument].
+     * @throws IllegalArgumentException If the root entity is not specified.
+     */
     fun buildDocument(): XMLDocument {
         requireNotNull(rootEntity) { "Root entity must be specified" }
         return XMLDocument(rootEntity!!, version, encoding)
     }
 }
 
+/**
+ * Creates an [XMLEntity] with the specified name and builder.
+ *
+ * @param name The name of the XML entity.
+ * @param build A lambda function for building the XML entity.
+ * @return The created [XMLEntity].
+ */
 fun xmlEntity(name: String, build: XMLEntity.() -> Unit = {}) =
     XMLEntity(name).apply {
         build(this)
     }
 
+/**
+ * Adds a child entity to this [XMLEntity].
+ *
+ * @param name The name of the child entity.
+ * @param build A lambda function for building the child entity.
+ * @return The created child [XMLEntity].
+ */
 fun XMLEntity.child(name: String, build: XMLEntity.() -> Unit = {}) =
     XMLEntity(name, this).apply {
         build(this)
     }
+
+/**
+ * Retrieves the entities with the specified name from the [XMLDocument].
+ *
+ * @param name The name of the entities to retrieve.
+ * @return A list of [XMLEntity] objects with the specified name.
+ */
+operator fun XMLDocument.get(name: String): List<XMLEntity> =
+    getEntities { it.name == name }
+
+/**
+ * Retrieves the attributes with the specified name from each [XMLEntity] in this list.
+ *
+ * @param name The name of the attributes to retrieve.
+ * @return A list of maps containing the attributes with the specified name.
+ */
+operator fun List<XMLEntity>.get(name: String): List<LinkedHashMap<String,String>>{
+    val list = mutableListOf<LinkedHashMap<String,String>>()
+    forEach { entity ->
+        list.add(entity.getAttributes() { key, _ -> key == name }) }
+    return list
+}
+
+/**
+ * Retrieves the attributes with the specified name from this [XMLEntity].
+ *
+ * @param name The name of the attributes to retrieve.
+ * @return A map containing the attributes with the specified name.
+ */
+operator fun XMLEntity.get(name: String): LinkedHashMap<String, String> =
+    getAttributes { key, _ -> key == name }
+
+
+/**
+ * Retrieves the child entity with the specified name from this [XMLEntity].
+ *
+ * @param name The name of the child entity to retrieve.
+ * @return The child [XMLEntity] with the specified name.
+ */
+operator fun XMLEntity.div(name: String): XMLEntity =
+    children.find { it.name == name } as XMLEntity

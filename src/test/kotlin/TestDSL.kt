@@ -5,8 +5,8 @@ import org.junit.jupiter.api.assertThrows
 class TestDSL {
 
     @Test
-    fun testEntityCreationWithDSL() {
-        xmlDocument({
+    fun testDocumentCreationWithDSL() {
+        val doc = xmlDocument({
             root("ReinosNórdicos"){
                 child("Midgard") {
                     addAttribute("Região", "Lago Dos Nove")
@@ -73,5 +73,22 @@ class TestDSL {
                 root("root1")
                 root("root2")
             })}
+
+        assertEquals(doc.getEntities(){ent -> ent.name =="Midgard"}, doc["Midgard"])
+
+        val list = mutableListOf<LinkedHashMap<String,String>>()
+        doc.getEntities().forEach(){e-> list.add(e.getAttributes() { key, _ -> key == "Curiosidade" })}
+        assertEquals(list, doc.getEntities()["Curiosidade"])
+
+        val a = xmlEntity("Regular-Show"){
+            child("Mordecai"){
+                addAttribute("Mordequices", "1")
+            }
+            child("Rigby")
+            addAttribute("Eggcelent","1")
+        }
+
+        assertEquals(linkedMapOf("Mordequices" to "1"),(a / "Mordecai")["Mordequices"])
+
     }
 }

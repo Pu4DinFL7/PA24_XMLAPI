@@ -4,10 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a7c901fa-b7bb-48ae-a020-fe9867977a67" name="Changes" comment="Added KDoc&#10;&#10;Also restructuring somethings">
-      <change afterPath="$PROJECT_DIR$/src/test/kotlin/TestDSL.kt" afterDir="false" />
+    <list default="true" id="a7c901fa-b7bb-48ae-a020-fe9867977a67" name="Changes" comment="DSL part1&#10;&#10;Also Some Restructuring like throws and yes">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/kotlin/XMLDocument.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/XMLDocument.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/kotlin/TestDSL.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/kotlin/TestDSL.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/kotlin/TestReflection.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/kotlin/TestReflection.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/test/kotlin/TestXML.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/kotlin/TestXML.kt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -38,7 +39,9 @@
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "Downloaded.Files.Path.Enabled": "false",
+    "JUnit.TestDSL.testDocumentCreationWithDSL.executor": "Run",
     "JUnit.TestDSL.testEntityCreationWithDSL.executor": "Run",
+    "JUnit.TestReflection.createEntityWithChildList.executor": "Run",
     "JUnit.TestXML.createEntity.executor": "Run",
     "JUnit.TestXML.testAddEntity.executor": "Run",
     "JUnit.TestXML.testAttributeVisitors.executor": "Run",
@@ -69,7 +72,17 @@
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
-  <component name="RunManager" selected="JUnit.TestDSL.testEntityCreationWithDSL">
+  <component name="RunManager" selected="JUnit.TestReflection.createEntityWithChildList">
+    <configuration name="TestDSL.testDocumentCreationWithDSL" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="PA24_XMLAPI" />
+      <option name="PACKAGE_NAME" value="" />
+      <option name="MAIN_CLASS_NAME" value="TestDSL" />
+      <option name="METHOD_NAME" value="testDocumentCreationWithDSL" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="TestDSL.testEntityCreationWithDSL" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="PA24_XMLAPI" />
       <option name="PACKAGE_NAME" value="" />
@@ -80,11 +93,11 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="TestXML.testAddEntity" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="TestReflection.createEntityWithChildList" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="PA24_XMLAPI" />
       <option name="PACKAGE_NAME" value="" />
-      <option name="MAIN_CLASS_NAME" value="TestXML" />
-      <option name="METHOD_NAME" value="testAddEntity" />
+      <option name="MAIN_CLASS_NAME" value="TestReflection" />
+      <option name="METHOD_NAME" value="createEntityWithChildList" />
       <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
@@ -110,20 +123,13 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="XMLDocumentKt" type="JetRunConfigurationType" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="XMLDocumentKt" />
-      <module name="PA24_XMLAPI" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="JUnit.TestReflection.createEntityWithChildList" />
+        <item itemvalue="JUnit.TestDSL.testDocumentCreationWithDSL" />
         <item itemvalue="JUnit.TestDSL.testEntityCreationWithDSL" />
         <item itemvalue="JUnit.TestXML.testEntityFunctionalities" />
         <item itemvalue="JUnit.TestXML.testDocumentFunctionalities" />
-        <item itemvalue="JUnit.TestXML.testAddEntity" />
-        <item itemvalue="Kotlin.XMLDocumentKt" />
       </list>
     </recent_temporary>
   </component>
@@ -153,7 +159,8 @@
       <workItem from="1716380112336" duration="3470000" />
       <workItem from="1716385383631" duration="404000" />
       <workItem from="1716393863108" duration="297000" />
-      <workItem from="1716486274304" duration="19012000" />
+      <workItem from="1716486274304" duration="19063000" />
+      <workItem from="1716816787057" duration="7709000" />
     </task>
     <task id="LOCAL-00001" summary="First commit">
       <option name="closed" value="true" />
@@ -251,7 +258,15 @@
       <option name="project" value="LOCAL" />
       <updated>1716420252875</updated>
     </task>
-    <option name="localTasksCounter" value="13" />
+    <task id="LOCAL-00013" summary="DSL part1&#10;&#10;Also Some Restructuring like throws and yes">
+      <option name="closed" value="true" />
+      <created>1716506942512</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1716506942512</updated>
+    </task>
+    <option name="localTasksCounter" value="14" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -281,6 +296,7 @@
     <MESSAGE value="Entretém-te" />
     <MESSAGE value="Dou um commit" />
     <MESSAGE value="Added KDoc&#10;&#10;Also restructuring somethings" />
-    <option name="LAST_COMMIT_MESSAGE" value="Added KDoc&#10;&#10;Also restructuring somethings" />
+    <MESSAGE value="DSL part1&#10;&#10;Also Some Restructuring like throws and yes" />
+    <option name="LAST_COMMIT_MESSAGE" value="DSL part1&#10;&#10;Also Some Restructuring like throws and yes" />
   </component>
 </project>

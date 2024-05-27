@@ -51,7 +51,6 @@ class TestXML {
         pontiffsullyvahn.editAttribute("year", "2011")
         pontiffsullyvahn.editAllAttributes({ s1, s2 -> s1 == "friendly" || s2 == "absolutely" || s1 == "cute"}, "AHA! You wish!")
         assertEquals(linkedMapOf("eyes" to "2", "anatomy" to "humanoid", "respawn" to "false", "swords" to "2", "friendly" to "AHA! You wish!", "cute" to "AHA! You wish!", "non-frustrating" to "AHA! You wish!"), pontiffsullyvahn.getAttributes())
-
     }
 //
 //    @Test
