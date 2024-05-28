@@ -321,4 +321,4 @@ In addition to this, the DSL also has operators for easy access to entities
 
 ## Authors
 <h1 align="center"><a href="https://github.com/Pu4DinFL7" style="text-decoration:none;"><img src="https://github.com/Pu4DinFL7.png" alt="Flávio Martins" width="100" height="100" style="border-radius: 50%; filter: grayscale(100%); transition: all 0.3s;"></a> <a href="https://github.com/Shrimpo22" style="text-decoration:none;"><img src="https://github.com/Shrimpo22.png" alt="Vasco Araújo" width="100" height="100" style="border-radius: 50%; filter: grayscale(100%); transition: all 0.3s;"></a></h1><br>
-This XML Creation API was authored by Flávio Martins nr 99360 and Vasco Araújo nr 98654as part of the Programação Avançada course at ISCTE for the academic year 2023/2024.
+This XML Creation API was authored by Flávio Martins nr 99360 and Vasco Araújo nr 98654 as part of the Programação Avançada course at ISCTE for the academic year 2023/2024.
