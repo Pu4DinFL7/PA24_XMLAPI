@@ -326,7 +326,7 @@ interface XMLVisitor{
 /**
  * Converts XML to a tree structure.
  */
-class XMLToTree : XMLVisitor {
+private class XMLToTree : XMLVisitor {
     private val stringBuilder = StringBuilder()
     private var indentationLevel = 0
 
@@ -365,7 +365,7 @@ class XMLToTree : XMLVisitor {
 /**
  * Operator for manipulating XML entities.
  */
- class XMLEntityOperator(
+ private class XMLEntityOperator(
     private val newName: String?,
     private val entityName: String?,
     private val operation: Operation,
@@ -420,7 +420,7 @@ class XMLToTree : XMLVisitor {
 /**
  * Operator for manipulating XML attributes.
  */
- class XMLAttributeOperator(
+ private class XMLAttributeOperator(
     private val name: String,
     private val value: String?,
     private val operation: Operation,
@@ -456,7 +456,7 @@ class XMLToTree : XMLVisitor {
 /**
  * Collects text from XML entities.
  */
- class XMLTextCollector : XMLVisitor {
+ private class XMLTextCollector : XMLVisitor {
     var collectedText:String = ""
     private var indentationLevel: Int = 0
     override fun visit(entity: XMLEntity) {
@@ -484,7 +484,7 @@ class XMLToTree : XMLVisitor {
 /**
  * Retrieves XML entities based on acceptance criteria.
  */
- class XMLEntityGetter(val accept: (XMLEntity) -> Boolean) : XMLVisitor {
+ private class XMLEntityGetter(val accept: (XMLEntity) -> Boolean) : XMLVisitor {
     var entities:MutableList<XMLEntity> = mutableListOf<XMLEntity>()
     override fun visit(entity: XMLEntity) {
         if(accept(entity))
