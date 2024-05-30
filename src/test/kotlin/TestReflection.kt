@@ -60,7 +60,7 @@ class TestReflection {
     @Test
     fun personalizeText(){
         val address = Address("Main St", 123, "Springfield")
-        assertEquals("Address city=\"Springfield\" number=\"123 Mermaid\" street=\"Main St\"", XMLEntity(address).fullName)
+        assertEquals("Address street=\"Main St\" number=\"123 Mermaid\" city=\"Springfield\"", XMLEntity(address).fullName)
     }
 
     @Test
@@ -78,7 +78,7 @@ class TestReflection {
     fun createSimpleEntityThroughClass(){
         val address = Address("Main St", 123, "Springfield")
         val addressEntity = XMLEntity(address)
-        assertEquals("Address city=\"Springfield\" number=\"123\" street=\"Main St\"", addressEntity.fullName)
+        assertEquals("Address street=\"Main St\" number=\"123 Mermaid\" city=\"Springfield\"", addressEntity.fullName)
     }
 
     @Test
@@ -86,10 +86,11 @@ class TestReflection {
         val address = Address("Main St", 123, "Springfield")
         val personClass = Person("John Doe", 30, "secret", address)
         val personEntity = XMLEntity(personClass)
-        assertEquals("persona name=\"John Doe\" age=\"30\"", personEntity.fullName)
+        assertEquals("persona age=\"30\" name=\"John Doe\"", personEntity.fullName)
 
         val doc = XMLDocument(personEntity)
-        assertEquals("persona\n" + "|-Address", doc.toTree())
+        assertEquals("persona\n" +
+                "└── Address", doc.toTree())
         assertEquals(2, doc.getEntities { true }.size)
 
 

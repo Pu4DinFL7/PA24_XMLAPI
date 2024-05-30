@@ -4,10 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a7c901fa-b7bb-48ae-a020-fe9867977a67" name="Changes" comment="Ez project">
+    <list default="true" id="a7c901fa-b7bb-48ae-a020-fe9867977a67" name="Changes" comment="It's done!">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/XMLDocument.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/XMLDocument.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/kotlin/TestXML.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/kotlin/TestXML.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/kotlin/TestReflection.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/kotlin/TestReflection.kt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -26,12 +25,12 @@
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
     <option name="RESET_MODE" value="HARD" />
   </component>
-  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
-  "lastFilter": {
-    "state": "OPEN",
-    "assignee": "Pu4DinFL7"
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;Pu4DinFL7&quot;
   }
-}]]></component>
+}</component>
   <component name="GithubPullRequestsUISettings">
     <option name="selectedUrlAndAccountId">
       <UrlAndAccount>
@@ -39,6 +38,9 @@
         <option name="url" value="https://github.com/Pu4DinFL7/PA24_XMLAPI.git" />
       </UrlAndAccount>
     </option>
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
   </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 7
@@ -54,7 +56,10 @@
     "Downloaded.Files.Path.Enabled": "false",
     "JUnit.TestDSL.testDocumentCreationWithDSL.executor": "Run",
     "JUnit.TestDSL.testEntityCreationWithDSL.executor": "Run",
+    "JUnit.TestReflection.createComplexEntityThroughClass.executor": "Run",
     "JUnit.TestReflection.createEntityWithChildList.executor": "Run",
+    "JUnit.TestReflection.createSimpleEntityThroughClass.executor": "Run",
+    "JUnit.TestReflection.personalizeText.executor": "Run",
     "JUnit.TestXML.createEntity.executor": "Run",
     "JUnit.TestXML.executor": "Run",
     "JUnit.TestXML.testAddEntity.executor": "Run",
@@ -88,7 +93,17 @@
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
-  <component name="RunManager" selected="JUnit.TestXML.testToXML">
+  <component name="RunManager" selected="JUnit.TestReflection.createComplexEntityThroughClass">
+    <configuration name="TestReflection.createComplexEntityThroughClass" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="PA24_XMLAPI" />
+      <option name="PACKAGE_NAME" value="" />
+      <option name="MAIN_CLASS_NAME" value="TestReflection" />
+      <option name="METHOD_NAME" value="createComplexEntityThroughClass" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="TestReflection.createEntityWithChildList" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="PA24_XMLAPI" />
       <option name="PACKAGE_NAME" value="" />
@@ -99,20 +114,21 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="TestXML" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="TestReflection.createSimpleEntityThroughClass" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="PA24_XMLAPI" />
       <option name="PACKAGE_NAME" value="" />
-      <option name="MAIN_CLASS_NAME" value="TestXML" />
-      <option name="TEST_OBJECT" value="class" />
+      <option name="MAIN_CLASS_NAME" value="TestReflection" />
+      <option name="METHOD_NAME" value="createSimpleEntityThroughClass" />
+      <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="TestXML.testDocumentFunctionalities" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="TestReflection.personalizeText" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="PA24_XMLAPI" />
       <option name="PACKAGE_NAME" value="" />
-      <option name="MAIN_CLASS_NAME" value="TestXML" />
-      <option name="METHOD_NAME" value="testDocumentFunctionalities" />
+      <option name="MAIN_CLASS_NAME" value="TestReflection" />
+      <option name="METHOD_NAME" value="personalizeText" />
       <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
@@ -128,22 +144,12 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="TestXML.testXPath" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="PA24_XMLAPI" />
-      <option name="PACKAGE_NAME" value="" />
-      <option name="MAIN_CLASS_NAME" value="TestXML" />
-      <option name="METHOD_NAME" value="testXPath" />
-      <option name="TEST_OBJECT" value="method" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="JUnit.TestReflection.createComplexEntityThroughClass" />
+        <item itemvalue="JUnit.TestReflection.createSimpleEntityThroughClass" />
+        <item itemvalue="JUnit.TestReflection.personalizeText" />
         <item itemvalue="JUnit.TestXML.testToXML" />
-        <item itemvalue="JUnit.TestXML.testXPath" />
-        <item itemvalue="JUnit.TestXML" />
-        <item itemvalue="JUnit.TestXML.testDocumentFunctionalities" />
         <item itemvalue="JUnit.TestReflection.createEntityWithChildList" />
       </list>
     </recent_temporary>
@@ -151,7 +157,7 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="jdk-19.0.2-corretto-19.0.2-f644763e9732-1e16d6ec" />
+        <option value="jdk-19.0.2-corretto-19.0.2-4caba194b151-48ba4555" />
       </set>
     </attachedChunks>
   </component>
@@ -176,6 +182,10 @@
       <workItem from="1716393863108" duration="297000" />
       <workItem from="1716486274304" duration="19063000" />
       <workItem from="1716816787057" duration="7709000" />
+      <workItem from="1716899779785" duration="201000" />
+      <workItem from="1716977944478" duration="2409000" />
+      <workItem from="1716985121033" duration="773000" />
+      <workItem from="1717064149381" duration="344000" />
     </task>
     <task id="LOCAL-00001" summary="First commit">
       <option name="closed" value="true" />
@@ -281,7 +291,15 @@
       <option name="project" value="LOCAL" />
       <updated>1716506942512</updated>
     </task>
-    <option name="localTasksCounter" value="14" />
+    <task id="LOCAL-00014" summary="It's done!">
+      <option name="closed" value="true" />
+      <created>1716899866244</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1716899866244</updated>
+    </task>
+    <option name="localTasksCounter" value="15" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -312,7 +330,8 @@
     <MESSAGE value="Dou um commit" />
     <MESSAGE value="Added KDoc&#10;&#10;Also restructuring somethings" />
     <MESSAGE value="DSL part1&#10;&#10;Also Some Restructuring like throws and yes" />
-    <option name="LAST_COMMIT_MESSAGE" value="DSL part1&#10;&#10;Also Some Restructuring like throws and yes" />
+    <MESSAGE value="It's done!" />
+    <option name="LAST_COMMIT_MESSAGE" value="It's done!" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
